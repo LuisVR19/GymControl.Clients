@@ -1,0 +1,164 @@
+<ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div>
+      <p class="label-mono">{{ monthLabel }}</p>
+      <h1 class="navbar__title">Agenda</h1>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <app-gym-badge></app-gym-badge>
+      <button class="btn-icon btn-icon--accent" (click)="openAssignModal()">
+        <ion-icon name="add-outline" style="font-size:22px;"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Skeleton: Calendar grid -->
+  <div class="section" *ngIf="loading">
+    <div class="card cal-card">
+      <div class="cal-days-head">
+        <span *ngFor="let d of weekDays">{{ d }}</span>
+      </div>
+      <div class="cal-grid">
+        <div *ngFor="let i of skCalDays" class="sk sk--cal-day"></div>
+      </div>
+      <div class="cal-legend">
+        <div class="cal-legend__item">
+          <span class="cal-legend__dot cal-legend__dot--done"></span>
+          <div class="sk sk--legend-lbl"></div>
+        </div>
+        <div class="cal-legend__item">
+          <span class="cal-legend__dot cal-legend__dot--planned"></span>
+          <div class="sk sk--legend-lbl"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendar grid -->
+  <div class="section" *ngIf="!loading">
+    <div class="card cal-card">
+
+      <div class="cal-days-head">
+        <span *ngFor="let d of weekDays">{{ d }}</span>
+      </div>
+
+      <div class="cal-grid">
+        <div *ngFor="let day of month"
+             class="cal-day"
+             [class.cal-day--today]="day.today"
+             [class.cal-day--done]="day.done && !day.today"
+             [class.cal-day--planned]="day.planned && !day.today && !day.done"
+             [class.cal-day--empty]="!day.n">
+          {{ day.n }}
+        </div>
+      </div>
+
+      <div class="cal-legend">
+        <div class="cal-legend__item">
+          <span class="cal-legend__dot cal-legend__dot--done"></span>
+          <span>Hecho</span>
+        </div>
+        <div class="cal-legend__item">
+          <span class="cal-legend__dot cal-legend__dot--planned"></span>
+          <span>Planeado</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Upcoming workouts -->
+  <div class="section">
+    <div class="section-header">
+      <p class="label-mono" style="margin: 0; padding-left: 4px;">Próximos</p>
+      <button class="assign-link" (click)="openAssignModal()">
+        <ion-icon name="add-outline" style="font-size:12px;"></ion-icon>
+        Asignar rutina
+      </button>
+    </div>
+
+    <!-- Skeleton: upcoming -->
+    <div class="upcoming-list" *ngIf="loading">
+      <div *ngFor="let i of [1,2,3]" class="card sk-upcoming-item">
+        <div class="sk-upcoming-date">
+          <div class="sk sk--upcoming-num"></div>
+          <div class="sk sk--upcoming-lbl"></div>
+        </div>
+        <div class="sk-divider"></div>
+        <div class="sk-upcoming-info">
+          <div class="sk sk--upcoming-name"></div>
+          <div class="sk sk--upcoming-time"></div>
+        </div>
+        <div class="sk sk--sched-icon"></div>
+      </div>
+    </div>
+
+    <div class="upcoming-list" *ngIf="upcoming.length && !loading">
+      <div *ngFor="let w of upcoming" class="card upcoming-item">
+        <div class="upcoming-item__date">
+          <span class="upcoming-item__day">{{ w.day }}</span>
+          <span class="upcoming-item__month label-mono">{{ w.month }}</span>
+        </div>
+        <div class="upcoming-item__divider"></div>
+        <div class="upcoming-item__info">
+          <p class="upcoming-item__name">{{ w.name }}</p>
+          <p class="upcoming-item__time label-mono">{{ w.time }}</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="upcoming-item__arrow"></ion-icon>
+      </div>
+    </div>
+
+    <div class="card empty-card" *ngIf="!upcoming.length && !loading">
+      <ion-icon name="calendar-outline" class="empty-card__icon"></ion-icon>
+      <p class="empty-card__text">Asigna rutinas a días de la semana para ver tus próximos entrenos</p>
+    </div>
+  </div>
+
+  <!-- Weekly schedule -->
+  <div class="section" style="padding-bottom: 32px;">
+    <p class="label-mono" style="margin-bottom: 10px; padding-left: 4px;">Programación semanal</p>
+
+    <!-- Skeleton: schedule -->
+    <div class="card schedule-list" *ngIf="loading">
+      <div *ngFor="let dow of DOW_NUMS; let last = last"
+           class="sk-sched-row"
+           [class.sk-sched-row--last]="last">
+        <div class="sk sk--sched-dow"></div>
+        <div class="sk sk--sched-name" style="flex: 1;"></div>
+        <div class="sk sk--sched-icon"></div>
+      </div>
+    </div>
+
+    <div class="card schedule-list" *ngIf="!loading">
+      <button *ngFor="let dow of DOW_NUMS; let last = last"
+              class="schedule-row"
+              [class.schedule-row--last]="last"
+              [class.schedule-row--set]="scheduleByDow.has(dow)"
+              (click)="openAssignModal(dow)">
+
+        <span class="schedule-row__dow">{{ DOW_LABELS[dow - 1] }}</span>
+
+        <div class="schedule-row__info">
+          <span class="schedule-row__name" *ngIf="scheduleByDow.has(dow)">
+            {{ scheduleByDow.get(dow)!.routineName }}
+            <span class="schedule-row__day-num">· Día {{ scheduleByDow.get(dow)!.dayNumber }}</span>
+          </span>
+          <span class="schedule-row__empty" *ngIf="!scheduleByDow.has(dow)">Sin asignar</span>
+        </div>
+
+        <ion-icon
+          [name]="scheduleByDow.has(dow) ? 'chevron-forward-outline' : 'add-outline'"
+          class="schedule-row__icon"
+          [class.schedule-row__icon--add]="!scheduleByDow.has(dow)">
+        </ion-icon>
+      </button>
+    </div>
+  </div>
+
+</ion-content>

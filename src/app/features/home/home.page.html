@@ -1,0 +1,158 @@
+<ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Navbar header -->
+  <div class="navbar">
+    <div>
+      <div class="gym-chip" *ngIf="gymName">
+        <app-gym-badge [size]="36"></app-gym-badge>
+        <span class="gym-chip__name">{{ gymName }}</span>
+        <ion-icon name="chevron-forward-outline" class="gym-chip__arrow"></ion-icon>
+      </div>
+      <p class="label-mono">{{ todayLabel }}</p>
+      <h1 class="navbar__title">Hola, {{ clientName || 'Atleta' }}</h1>
+    </div>
+    <div class="navbar__actions">
+      <button class="btn-icon" (click)="theme.toggle()"
+              [attr.aria-label]="theme.isDark() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+        <svg *ngIf="theme.isDark()" width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg *ngIf="!theme.isDark()" width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="btn-icon btn-icon--notif" aria-label="Notificaciones"
+              routerLink="/tabs/inicio/notificaciones">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <span class="notif-badge" *ngIf="notifCount > 0">{{ notifCount }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Hero workout card -->
+  <div class="section">
+    <div class="hero-card">
+
+      <!-- Today has a scheduled workout -->
+      <ng-container *ngIf="todayWorkout">
+        <p class="label-mono" style="color: rgba(255,255,255,0.5); margin-bottom: 14px;">
+          Hoy · Día {{ todayWorkout.dayNumber }} / {{ todayWorkout.totalDays }}
+        </p>
+        <h2 class="hero-card__title">{{ todayWorkout.routineName }}</h2>
+        <div class="hero-card__stats">
+          <span><strong>{{ todayWorkout.exercisesCount }}</strong> ejercicios</span>
+          <span><strong>~{{ todayWorkout.estimatedMins }}</strong> min</span>
+          <span><strong>{{ todayWorkout.setsCount }}</strong> series</span>
+        </div>
+        <button class="btn-primary btn-accent" (click)="goToWorkout()">
+          <ion-icon name="play"></ion-icon>
+          Empezar entreno
+        </button>
+      </ng-container>
+
+      <!-- No workout scheduled for today -->
+      <ng-container *ngIf="!todayWorkout">
+        <p class="label-mono" style="color: rgba(255,255,255,0.5); margin-bottom: 14px;">Hoy</p>
+        <h2 class="hero-card__title" style="font-size: 22px; opacity: 0.7;">Sin entreno hoy</h2>
+        <p style="color: rgba(255,255,255,0.45); font-size: 13px; margin: 8px 0 20px;">
+          No tenés ninguna rutina asignada para hoy.
+        </p>
+        <button class="btn-primary" style="background: rgba(255,255,255,0.12);" routerLink="/tabs/agenda">
+          <ion-icon name="calendar-outline"></ion-icon>
+          Ver agenda
+        </button>
+      </ng-container>
+
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="section section--row">
+
+    <ng-container *ngIf="loading">
+      <div class="card stats-card stats-card--skeleton">
+        <div class="sk-line sk-line--label"></div>
+        <div class="sk-line sk-line--num"></div>
+        <div class="sk-line sk-line--dots"></div>
+      </div>
+      <div class="card stats-card stats-card--skeleton">
+        <div class="sk-line sk-line--label"></div>
+        <div class="sk-line sk-line--num"></div>
+        <div class="sk-line sk-line--sub"></div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!loading">
+      <div class="card stats-card">
+        <p class="label-mono">Esta semana</p>
+        <div class="stats-card__num">
+          {{ stats.completed }}<span class="stats-card__total">/{{ stats.total }}</span>
+        </div>
+        <div class="week-dots">
+          <div *ngFor="let dot of weekDots"
+               class="week-dot"
+               [class.week-dot--done]="dot === 1"></div>
+        </div>
+      </div>
+
+      <div class="card stats-card">
+        <p class="label-mono">Racha</p>
+        <div class="stats-card__num">
+          {{ stats.streak }}<span class="stats-card__unit"> días</span>
+        </div>
+        <div class="streak-label">
+          <ion-icon name="flame-outline" color="warning"></ion-icon>
+          <span>récord personal</span>
+        </div>
+      </div>
+    </ng-container>
+
+  </div>
+
+  <!-- Membership card -->
+  <div class="section">
+    <p class="label-mono" style="margin-bottom: 8px; padding-left: 4px;">Membresía</p>
+    <button class="card membership-card" (click)="goToProfile()" *ngIf="plan; else noMembership">
+      <div class="membership-card__icon">
+        <ion-icon name="card-outline"></ion-icon>
+      </div>
+      <div class="membership-card__info">
+        <p class="membership-card__name">{{ plan.name }}</p>
+        <p class="membership-card__sub">Próximo cobro · {{ plan.nextPayment }}</p>
+      </div>
+      <span class="membership-card__price">₡{{ plan.price | number }}</span>
+    </button>
+    <ng-template #noMembership>
+      <div class="card membership-card membership-card--empty">
+        <div class="membership-card__icon">
+          <ion-icon name="card-outline"></ion-icon>
+        </div>
+        <div class="membership-card__info">
+          <p class="membership-card__name">Sin membresía</p>
+          <p class="membership-card__sub">No estás afiliado a ningún gimnasio</p>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="section">
+    <p class="label-mono" style="margin-bottom: 8px; padding-left: 4px;">Acciones rápidas</p>
+    <div class="quick-actions">
+      <button class="card quick-action">
+        <ion-icon name="barbell-outline"></ion-icon>
+        <span>Registrar peso</span>
+      </button>
+      <button class="card quick-action" (click)="openMeasurementsModal()">
+        <ion-icon name="resize-outline"></ion-icon>
+        <span>Medidas</span>
+      </button>
+    </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,64 @@
+<ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1 class="navbar__title">Rutinas</h1>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <app-gym-badge></app-gym-badge>
+      <button class="btn-icon" aria-label="Buscar">
+        <ion-icon name="search-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Program info -->
+  <div class="program-info">
+    <p class="label-mono" style="margin: 0 0 4px;">Programa actual</p>
+    <h2 class="program-info__name">{{ program }}</h2>
+    <p class="program-info__note">{{ programNote }}</p>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div class="skeleton-list" *ngIf="loading">
+    <div *ngFor="let i of [1,2,3]" class="card skeleton-routine-card">
+      <div class="sk sk--label"></div>
+      <div class="sk sk--title"></div>
+      <div class="sk sk--meta"></div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && routines.length === 0">
+    <ion-icon name="barbell-outline" class="empty-state__icon"></ion-icon>
+    <p class="empty-state__title">Sin rutinas asignadas</p>
+    <p class="empty-state__sub">Tu entrenador aún no te ha asignado una rutina</p>
+  </div>
+
+  <!-- Routine list -->
+  <div class="routine-list" *ngIf="!loading && routines.length > 0">
+    <button *ngFor="let r of routines"
+            class="routine-card card"
+            [class.routine-card--active]="r.active"
+            (click)="openDetail(r)">
+
+      <div class="routine-card__header">
+        <div>
+          <p class="label-mono" [class.label-mono--active]="r.active">{{ r.day }}</p>
+          <h3 class="routine-card__name">{{ r.name }}</h3>
+        </div>
+        <span *ngIf="r.active" class="pill pill-accent">Hoy</span>
+      </div>
+
+      <div class="routine-card__meta">
+        <span>{{ r.exercisesCount }} ejercicios</span>
+        <span>{{ r.setsCount }} series</span>
+      </div>
+
+    </button>
+  </div>
+
+</ion-content>

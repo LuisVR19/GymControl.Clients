@@ -1,0 +1,125 @@
+/* Forja — Design System Tokens
+   Premium minimalista · neutros cálidos + lima eléctrico */
+
+/* ─── Dark-mode variables (mixin to avoid duplication) ──────────────────── */
+@mixin dark-theme {
+  --bg:     #0E0E0C;
+  --bg-elev: #161614;
+  --bg-sunk: #0A0A09;
+  --ink:    #F5F4EE;
+  --ink-2:  #E5E3DA;
+  --ink-3:  #A0A097;
+  --ink-4:  #5A5A52;
+  --line:   rgba(245, 244, 238, 0.08);
+  --line-2: rgba(245, 244, 238, 0.04);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,244,238,0.05);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,244,238,0.05);
+  --surface-inverse:   #1C1C19;
+  --on-surface-inverse:   #F5F4EE;
+  --on-surface-inverse-2: rgba(245, 244, 238, 0.6);
+
+  --ion-background-color:     var(--bg);
+  --ion-background-color-rgb: 14, 14, 12;
+  --ion-text-color:           var(--ink);
+  --ion-text-color-rgb:       245, 244, 238;
+  --ion-toolbar-background:   var(--bg);
+  --ion-toolbar-color:        var(--ink);
+  --ion-tab-bar-background:   rgba(14, 14, 12, 0.88);
+  --ion-tab-bar-color:        var(--ink-4);
+  --ion-tab-bar-color-selected: var(--ink);
+  --ion-card-background:      var(--bg-elev);
+  --ion-item-background:      transparent;
+}
+
+/* ─── Base (light mode) ──────────────────────────────────────────────────── */
+:root {
+  --font-display: 'Inter Tight', -apple-system, system-ui, sans-serif;
+  --font-ui:      'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --bg:     #FAF9F6;
+  --bg-elev: #FFFFFF;
+  --bg-sunk: #F2F0EA;
+  --ink:    #0E0E0C;
+  --ink-2:  #2B2B27;
+  --ink-3:  #6B6B64;
+  --ink-4:  #A6A69D;
+  --line:   rgba(14, 14, 12, 0.08);
+  --line-2: rgba(14, 14, 12, 0.04);
+  --accent:     oklch(0.85 0.18 130);
+  --accent-ink: #0E0E0C;
+  --danger: oklch(0.62 0.18 25);
+  --warn:   oklch(0.78 0.14 75);
+  --shadow-sm: 0 1px 2px rgba(14,14,12,0.04), 0 0 0 1px rgba(14,14,12,0.04);
+  --shadow-md: 0 4px 16px rgba(14,14,12,0.06), 0 0 0 1px rgba(14,14,12,0.04);
+  --surface-inverse:      #0E0E0C;
+  --on-surface-inverse:   #F5F4EE;
+  --on-surface-inverse-2: rgba(245, 244, 238, 0.6);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+
+  /* Ionic color system */
+  --ion-color-primary:              oklch(0.85 0.18 130);
+  --ion-color-primary-rgb:          180, 233, 60;
+  --ion-color-primary-contrast:     #0E0E0C;
+  --ion-color-primary-contrast-rgb: 14, 14, 12;
+  --ion-color-primary-shade:        oklch(0.78 0.18 130);
+  --ion-color-primary-tint:         oklch(0.88 0.15 130);
+
+  --ion-color-secondary:              #2B2B27;
+  --ion-color-secondary-rgb:          43, 43, 39;
+  --ion-color-secondary-contrast:     #FAF9F6;
+  --ion-color-secondary-contrast-rgb: 250, 249, 246;
+  --ion-color-secondary-shade:        #1a1a17;
+  --ion-color-secondary-tint:         #3d3d39;
+
+  --ion-color-danger:              oklch(0.62 0.18 25);
+  --ion-color-danger-rgb:          220, 80, 60;
+  --ion-color-danger-contrast:     #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade:        oklch(0.55 0.18 25);
+  --ion-color-danger-tint:         oklch(0.68 0.16 25);
+
+  --ion-color-warning:              oklch(0.78 0.14 75);
+  --ion-color-warning-rgb:          210, 170, 20;
+  --ion-color-warning-contrast:     #0E0E0C;
+  --ion-color-warning-contrast-rgb: 14, 14, 12;
+  --ion-color-warning-shade:        oklch(0.70 0.14 75);
+  --ion-color-warning-tint:         oklch(0.84 0.12 75);
+
+  --ion-color-medium:              #A6A69D;
+  --ion-color-medium-rgb:          166, 166, 157;
+  --ion-color-medium-contrast:     #0E0E0C;
+  --ion-color-medium-contrast-rgb: 14, 14, 12;
+  --ion-color-medium-shade:        #8e8e85;
+  --ion-color-medium-tint:         #b8b8af;
+
+  --ion-background-color:     var(--bg);
+  --ion-background-color-rgb: 250, 249, 246;
+  --ion-text-color:           var(--ink);
+  --ion-text-color-rgb:       14, 14, 12;
+  --ion-font-family:          var(--font-ui);
+  --ion-toolbar-background:   var(--bg);
+  --ion-toolbar-color:        var(--ink);
+  --ion-toolbar-border-color: transparent;
+  --ion-tab-bar-background:   rgba(250, 249, 246, 0.88);
+  --ion-tab-bar-border-color: var(--line);
+  --ion-tab-bar-color:        var(--ink-4);
+  --ion-tab-bar-color-selected: var(--ink);
+  --ion-item-background:      transparent;
+  --ion-card-background:      var(--bg-elev);
+}
+
+/* System preference dark — respetado salvo que el usuario haya elegido claro */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @include dark-theme;
+  }
+}
+
+/* Override explícito del usuario */
+:root[data-theme="dark"] {
+  @include dark-theme;
+}

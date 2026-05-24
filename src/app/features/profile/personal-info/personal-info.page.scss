@@ -1,0 +1,237 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 20px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+
+  &__action {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-2);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-ui);
+    padding: 8px 4px;
+  }
+}
+
+.avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+
+  &--editing { cursor: pointer; }
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &__icon {
+    font-size: 22px;
+    color: #fff;
+  }
+
+  &__spinner {
+    color: #fff;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.avatar-input {
+  display: none;
+}
+
+.user-header {
+  padding: 4px 20px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  &__info { flex: 1; min-width: 0; }
+
+  &__name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__email {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin: 0 0 2px;
+  }
+
+  &__id {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--ink-4);
+    letter-spacing: 0.3px;
+    margin: 0;
+  }
+}
+
+.section {
+  padding: 0 20px 18px;
+
+  &__label { margin-bottom: 8px; padding-left: 4px; }
+}
+
+/* Info card rows */
+.info-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line-2);
+  min-height: 50px;
+
+  &--last { border-bottom: none; }
+
+  &__label {
+    flex: 0 0 110px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--ink-3);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+
+  &__value {
+    flex: 1;
+    font-size: 14px;
+    color: var(--ink);
+
+    &--muted { color: var(--ink-3); }
+  }
+
+  &__suffix-inline {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-left: 3px;
+  }
+
+  &__input {
+    flex: 1;
+    border: none;
+    background: var(--bg-sunk);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+    min-width: 0;
+    width: 100%;
+  }
+
+  &__input-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    input { flex: 1; min-width: 0; }
+  }
+
+  &__suffix {
+    font-size: 12px;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+  }
+}
+
+/* Sticky edit bar */
+.edit-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 20px calc(env(safe-area-inset-bottom) + 64px);
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 0.5px solid var(--line);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+
+  &__cancel {
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: var(--bg-elev);
+    color: var(--ink-2);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-ui);
+  }
+
+  &__save {
+    flex: 1;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: var(--ink);
+    color: var(--bg);
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+}
+
+/* Skeleton */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.sk {
+  border-radius: 6px;
+  background: var(--bg-sunk);
+  animation: pulse 1.4s ease-in-out infinite;
+
+  &--avatar  { width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0; }
+  &--name    { height: 18px; width: 140px; border-radius: 5px; }
+  &--sub     { height: 11px; width: 180px; border-radius: 4px; }
+  &--section-title { height: 10px; width: 80px; margin-bottom: 8px; padding-left: 4px; }
+}
+
+.sk-row {
+  height: 50px;
+  border-bottom: 1px solid var(--line-2);
+
+  &:last-child { border-bottom: none; }
+}

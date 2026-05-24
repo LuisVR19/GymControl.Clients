@@ -1,0 +1,98 @@
+<ion-content [fullscreen]="true" class="detail-content">
+
+  <!-- Navbar -->
+  <div class="detail-navbar">
+    <button class="btn-icon btn-icon--sunk" (click)="goBack()" aria-label="Volver">
+      <ion-icon name="arrow-back-outline" style="font-size:18px;"></ion-icon>
+    </button>
+    <span class="label-mono">Detalle de rutina</span>
+    <button class="btn-icon" aria-label="Opciones">
+      <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Hero -->
+  <div class="detail-hero">
+    <p class="label-mono detail-hero__day">
+      {{ dayLabel }}<span *ngIf="active"> · ACTIVA</span>
+    </p>
+    <h1 class="detail-hero__name">{{ routineName }}</h1>
+    <div class="detail-hero__stats">
+      <div class="detail-stat">
+        <span class="detail-stat__num">{{ exercises.length || exercisesCount }}</span>
+        <span class="detail-stat__label">ejercicios</span>
+      </div>
+      <div class="detail-stat">
+        <span class="detail-stat__num">{{ setsCount }}</span>
+        <span class="detail-stat__label">series</span>
+      </div>
+      <div class="detail-stat">
+        <span class="detail-stat__num">~{{ estimatedMins }}</span>
+        <span class="detail-stat__label">min</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Muscle pills -->
+  <div class="muscle-pills" *ngIf="!loading && exerciseGroups.length">
+    <span *ngFor="let g of exerciseGroups" class="pill pill-muted">
+      {{ g.muscle }} · {{ g.exercises.length }}
+    </span>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div class="skeleton-wrap" *ngIf="loading">
+    <div *ngFor="let i of [1,2,3]" class="skeleton-group">
+      <div class="skeleton-label"></div>
+      <div class="card skeleton-card">
+        <div *ngFor="let j of [1,2,3]" class="skeleton-row"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exercise groups -->
+  <div class="exercise-groups" *ngIf="!loading">
+
+    <div *ngIf="exerciseGroups.length === 0" class="empty-exs">
+      <ion-icon name="barbell-outline" style="font-size:32px; color:var(--ink-4);"></ion-icon>
+      <p style="color:var(--ink-3); font-size:13px; margin:8px 0 0;">Sin ejercicios registrados</p>
+    </div>
+
+    <div *ngFor="let g of exerciseGroups" class="exercise-group">
+      <p class="label-mono group-label">{{ g.muscle }}</p>
+      <div class="card exercise-card">
+        <div *ngFor="let ex of g.exercises; let i = index; let last = last"
+             class="ex-row"
+             [class.ex-row--last]="last">
+
+          <div class="ex-row__num">{{ i + 1 }}</div>
+
+          <div class="ex-row__body">
+            <p class="ex-row__name">{{ ex.name }}</p>
+            <div class="ex-row__meta">
+              <span>{{ ex.target }}</span>
+            </div>
+            <p class="ex-row__last">ÚLTIMA · {{ ex.lastPerformance }}</p>
+          </div>
+
+          <button class="btn-detail" (click)="openExerciseDetail(ex)" aria-label="Ver detalles">
+            <ion-icon name="information-circle-outline" style="font-size:18px;"></ion-icon>
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="detail-footer">
+    <button class="btn-primary"
+            [class.btn-accent]="active"
+            (click)="startWorkout()">
+      <ion-icon name="play" style="font-size:14px;"></ion-icon>
+      {{ active ? 'Empezar entreno' : 'Hacer esta rutina' }}
+    </button>
+  </div>
+
+</ion-content>

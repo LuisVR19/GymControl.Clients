@@ -1,0 +1,114 @@
+<ion-content [fullscreen]="true">
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <button class="btn-icon btn-icon--sunk" (click)="goBack()" aria-label="Volver">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <p class="label-mono" style="margin: 0;">Datos personales</p>
+    <button class="navbar__action" (click)="editing ? cancelEdit() : startEdit()">
+      {{ editing ? 'Cancelar' : 'Editar' }}
+    </button>
+  </div>
+
+  <!-- Skeleton -->
+  <ng-container *ngIf="loading">
+    <div class="user-header">
+      <div class="sk sk--avatar"></div>
+      <div>
+        <div class="sk sk--name"></div>
+        <div class="sk sk--sub" style="margin-top: 6px;"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="sk sk--section-title"></div>
+      <div class="card info-card">
+        <div *ngFor="let i of [1,2,3,4,5,6,7]" class="sk-row"></div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Content -->
+  <ng-container *ngIf="!loading">
+
+    <!-- User header -->
+    <div class="user-header">
+
+      <!-- Avatar with upload overlay -->
+      <div class="avatar-wrap" [class.avatar-wrap--editing]="editing">
+        <app-avatar [name]="draft.name || data.name" [size]="64"
+                    [avatarUrl]="editing ? draft.avatarUrl : data.avatarUrl">
+        </app-avatar>
+
+        <label *ngIf="editing" class="avatar-overlay" for="avatarInput" aria-label="Cambiar foto">
+          <ion-spinner *ngIf="avatarUploading" name="crescent" class="avatar-overlay__spinner"></ion-spinner>
+          <ion-icon *ngIf="!avatarUploading" name="camera-outline" class="avatar-overlay__icon"></ion-icon>
+        </label>
+
+        <input id="avatarInput" type="file" accept="image/*"
+               class="avatar-input"
+               (change)="onAvatarFileSelected($event)" />
+      </div>
+
+      <div class="user-header__info">
+        <h2 class="user-header__name">{{ data.name || 'Sin nombre' }}</h2>
+        <p class="user-header__email">{{ data.email }}</p>
+        <p class="user-header__id">{{ memberId }}</p>
+      </div>
+    </div>
+
+    <!-- Sección: Información -->
+    <div class="section">
+      <p class="label-mono section__label">Información</p>
+      <div class="card info-card">
+
+        <div class="field-row">
+          <span class="field-row__label">Nombre</span>
+          <input *ngIf="editing" class="field-row__input" [(ngModel)]="draft.name" type="text" autocomplete="name"/>
+          <span *ngIf="!editing" class="field-row__value">{{ data.name || '—' }}</span>
+        </div>
+
+        <div class="field-row">
+          <span class="field-row__label">Correo</span>
+          <span class="field-row__value field-row__value--muted">{{ data.email || '—' }}</span>
+        </div>
+
+        <div class="field-row field-row--last">
+          <span class="field-row__label">Teléfono</span>
+          <input *ngIf="editing" class="field-row__input" [(ngModel)]="draft.phone" type="tel" autocomplete="tel"/>
+          <span *ngIf="!editing" class="field-row__value">{{ data.phone || '—' }}</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Sección: Cuenta (solo lectura) -->
+    <div class="section" [style.padding-bottom]="editing ? '120px' : '32px'">
+      <p class="label-mono section__label">Cuenta</p>
+      <div class="card info-card">
+        <div class="field-row">
+          <span class="field-row__label">Sede</span>
+          <span class="field-row__value">{{ gymName || '—' }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-row__label">Membresía</span>
+          <span class="field-row__value">{{ planName || '—' }}</span>
+        </div>
+        <div class="field-row field-row--last">
+          <span class="field-row__label">Miembro desde</span>
+          <span class="field-row__value">{{ memberSince || '—' }}</span>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+</ion-content>
+
+<!-- Sticky edit bar (outside ion-content so stays fixed) -->
+<div class="edit-bar" *ngIf="editing">
+  <button class="edit-bar__cancel" (click)="cancelEdit()">Cancelar</button>
+  <button class="edit-bar__save" (click)="saveEdit()" [disabled]="saving">
+    {{ saving ? 'Guardando…' : 'Guardar cambios' }}
+  </button>
+</div>

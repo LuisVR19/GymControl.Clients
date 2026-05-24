@@ -1,0 +1,300 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 20px 8px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin: 0;
+    color: var(--ink);
+  }
+}
+
+.user-header {
+  padding: 4px 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  &__name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 2px;
+  }
+
+  &__sub {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin: 0;
+  }
+}
+
+.section { padding: 0 20px 16px; }
+
+/* Membership dark card */
+.membership-card {
+  background: var(--surface-inverse);
+  color: var(--on-surface-inverse);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  overflow: hidden;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+
+  &__name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    margin: 4px 0 0;
+    color: var(--on-surface-inverse);
+  }
+
+  &__status {
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    background: var(--accent);
+    color: var(--accent-ink);
+    letter-spacing: 0.5px;
+    align-self: flex-start;
+  }
+
+  /* Progress bar */
+  &__progress {
+    margin-bottom: 18px;
+  }
+
+  &__progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.12);
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  &__progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  &__progress-label {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--on-surface-inverse-2);
+    letter-spacing: 0.3px;
+    margin: 0;
+  }
+
+  &__details {
+    display: flex;
+    gap: 24px;
+  }
+
+  &__detail-label {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--on-surface-inverse-2);
+    letter-spacing: 0.5px;
+    margin: 0 0 4px;
+  }
+
+  &__detail-value {
+    color: var(--on-surface-inverse);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  /* Features list */
+  &__features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  &__feature {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--on-surface-inverse-2);
+    letter-spacing: 0.3px;
+  }
+
+  /* Empty / no-gym state */
+  &--empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 28px 20px;
+    text-align: center;
+    background: var(--bg-sunk);
+    color: inherit;
+  }
+
+  &__empty-icon {
+    font-size: 28px;
+    color: var(--ink-4);
+    margin-bottom: 4px;
+  }
+
+  &__empty-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-3);
+    margin: 0;
+  }
+
+  &__empty-sub {
+    font-size: 12px;
+    color: var(--ink-4);
+    font-family: var(--font-mono);
+    letter-spacing: 0.3px;
+    margin: 0;
+  }
+
+  /* Status badge variants */
+  &__status--expired {
+    background: var(--danger) !important;
+    color: #fff !important;
+  }
+
+  &__status--pending {
+    background: rgba(255,255,255,0.15) !important;
+    color: rgba(255,255,255,0.7) !important;
+  }
+}
+
+/* ── Skeleton ── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.sk {
+  border-radius: 5px;
+  background: var(--bg-sunk);
+  animation: pulse 1.4s ease-in-out infinite;
+
+  &--label { height: 10px; width: 120px; display: block; }
+}
+
+.skeleton-membership-card {
+  height: 180px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-sunk);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* Settings list */
+.settings-list {
+  padding: 0;
+  overflow: hidden;
+}
+
+.settings-item {
+  width: 100%;
+  text-align: left;
+  padding: 14px 18px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--line-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--ink);
+  font-size: 14px;
+  font-family: var(--font-ui);
+  transition: background 0.15s;
+
+  &:active { background: var(--bg-sunk); }
+
+  &--danger { color: var(--danger); }
+  &--last { border-bottom: none; }
+
+  ion-icon { color: var(--ink-4); font-size: 14px; }
+}
+
+// ── Affiliate CTA ─────────────────────────────────────────────
+.affiliate-cta-section { padding-bottom: 8px; }
+
+.affiliate-cta {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px dashed var(--line);
+  background: var(--bg-elev);
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s;
+
+  &:active { background: var(--bg-sunk); }
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    background: var(--ink);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon { font-size: 20px; }
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    font-family: var(--font-ui);
+  }
+
+  &__sub {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-family: var(--font-ui);
+  }
+
+  &__arrow {
+    color: var(--ink-4);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+}

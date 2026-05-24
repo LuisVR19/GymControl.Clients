@@ -1,0 +1,253 @@
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* Dark mode via system preference */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+/* Theme */
+@import "theme/variables.scss";
+
+/* ─── Base ───────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Ion overrides ──────────────────────────────────────── */
+ion-content { --background: var(--bg); }
+
+ion-header::after { display: none; }
+ion-header ion-toolbar {
+  --background: var(--bg);
+  --border-color: transparent;
+  --border-width: 0;
+  --box-shadow: none;
+  &::after { display: none; }
+}
+
+ion-tab-bar {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 0.5px solid var(--line) !important;
+  height: 58px;
+
+  &.tab-bar-hidden { display: none; }
+}
+
+ion-tab-button {
+  --color: var(--ink-4);
+  --color-selected: var(--ink);
+  ion-label { font-size: 10px; font-weight: 500; margin-top: 2px; }
+  ion-icon { font-size: 22px; }
+}
+
+ion-item {
+  --background: transparent;
+  --background-activated: var(--bg-sunk);
+  --border-color: var(--line-2);
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+/* ─── Cards ──────────────────────────────────────────────── */
+.card {
+  background: var(--bg-elev);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─── Typography helpers ─────────────────────────────────── */
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.num-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -1px;
+  color: var(--ink);
+  line-height: 1;
+}
+
+/* ─── Pills ──────────────────────────────────────────────── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.pill-accent  { background: var(--accent); color: var(--accent-ink); }
+.pill-muted   { background: var(--bg-sunk); color: var(--ink-3); }
+.pill-success { background: color-mix(in oklab, var(--accent) 25%, transparent); color: var(--ink-2); }
+.pill-danger  { background: color-mix(in oklab, var(--danger) 20%, transparent); color: var(--danger); }
+
+/* ─── Button helpers ─────────────────────────────────────── */
+.btn-primary {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; width: 100%; padding: 16px;
+  border-radius: var(--radius-md); border: none;
+  background: var(--ink); color: var(--bg);
+  font-family: var(--font-display); font-weight: 600; font-size: 15px;
+  cursor: pointer; transition: opacity 0.15s;
+  &:active { opacity: 0.85; }
+  &.btn-accent { background: var(--accent); color: var(--accent-ink); }
+}
+
+.btn-ghost {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 14px; width: 100%;
+  background: var(--bg-elev); border: 1px solid var(--line);
+  border-radius: var(--radius-md); color: var(--ink-2);
+  font-family: var(--font-ui); font-weight: 500; font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-icon {
+  width: 40px; height: 40px; border-radius: 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer;
+  color: var(--ink-2); flex-shrink: 0; padding: 0;
+  &--sunk  { background: var(--bg-sunk); }
+  &--accent { background: var(--accent); color: var(--accent-ink); }
+}
+
+/* ─── Progress bar ───────────────────────────────────────── */
+.progress-bar {
+  height: 4px; background: var(--bg-sunk); border-radius: 2px; overflow: hidden;
+  &__fill {
+    height: 100%; background: var(--accent);
+    border-radius: 2px; transition: width 0.3s ease;
+  }
+}
+
+/* ─── Number input ───────────────────────────────────────── */
+.input-num {
+  border: none; background: var(--bg-sunk);
+  border-radius: var(--radius-sm); padding: 8px 10px;
+  font-family: var(--font-mono); font-size: 14px;
+  color: var(--ink); width: 100%; text-align: center;
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button, &::-webkit-inner-spin-button { -webkit-appearance: none; }
+}
+
+/* ─── Scrollbar hidden ───────────────────────────────────── */
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
+
+/* ─── Gym chip (Home navbar) ─────────────────────────────── */
+.gym-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 99px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line-2);
+  margin-bottom: 8px;
+  cursor: default;
+
+  &__logo {
+    width: 28px; height: 28px; border-radius: 28px;
+    background: #0d0d0d;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; flex-shrink: 0;
+    img { width: 20px; height: 20px; object-fit: contain; display: block; }
+  }
+
+  &__name {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.2px; color: var(--ink-2);
+  }
+
+  &__arrow { font-size: 10px; color: var(--ink-4); }
+}
+
+/* ─── Gym badge (navbar right, all screens except Profile) ── */
+.gym-badge {
+  width: 40px; height: 40px; border-radius: 40px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line-2);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  padding: 4px;
+  flex-shrink: 0;
+
+  img { width: 100%; height: 100%; object-fit: contain; display: block; }
+}
+
+/* ─── App version footer ─────────────────────────────────── */
+.app-version {
+  padding: 24px 20px 8px;
+  text-align: center;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  letter-spacing: 1.2px;
+  color: var(--ink-4);
+  text-transform: uppercase;
+}
+
+/* ─── QR Scanner transparent background ─────────────────── */
+// Applied to body while @capacitor-mlkit/barcode-scanning is active.
+// Makes the webview transparent so the native camera layer shows through.
+.qr-scanner-active {
+  background: transparent !important;
+
+  ion-app,
+  .ion-page,
+  ion-router-outlet {
+    background: transparent !important;
+  }
+}
+
+/* ─── Assign routine bottom sheet ───────────────────────── */
+.assign-routine-sheet {
+  --height: 90%;
+  --border-radius: 24px 24px 0 0;
+  --background: var(--bg);
+  --box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+  align-items: flex-end;
+}
+
+/* ─── Log measurements bottom sheet ─────────────────────── */
+.measurements-sheet {
+  --height: 88%;
+  --border-radius: 24px 24px 0 0;
+  --background: var(--bg);
+  --box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+  align-items: flex-end;
+}
+
+/* ─── Exercise detail bottom sheet ──────────────────────── */
+.exercise-detail-sheet {
+  --height: 75%;
+  --border-radius: 24px 24px 0 0;
+  --background: var(--bg);
+  --box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+  align-items: flex-end;
+}

@@ -1,0 +1,402 @@
+ion-content {
+  --background: #0a0a0a;
+  --color: #fff;
+
+  // When native scanner is active, make webview transparent
+  &.scanner-transparent {
+    --background: transparent;
+  }
+}
+
+// ── Result screens (done / already_affiliated / error) ────────
+.result-screen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+  background: var(--bg);
+  gap: 0;
+
+  &__icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    ion-icon { font-size: 32px; }
+
+    &--success {
+      background: var(--accent);
+      ion-icon { color: var(--accent-ink); }
+    }
+
+    &--info {
+      background: color-mix(in oklab, var(--accent) 20%, transparent);
+      ion-icon { color: var(--ink-2); }
+    }
+
+    &--error {
+      background: color-mix(in oklab, var(--danger) 15%, transparent);
+      ion-icon { color: var(--danger); }
+    }
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+
+  &__sub {
+    font-size: 14px;
+    color: var(--ink-3);
+    max-width: 280px;
+    line-height: 1.5;
+    margin: 0 0 24px;
+  }
+
+  &__btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 10px;
+    transition: opacity 0.15s;
+
+    &:active { opacity: 0.85; }
+
+    &--ghost {
+      background: transparent;
+      color: var(--ink-3);
+      border: 1px solid var(--line);
+    }
+  }
+}
+
+// ── Scanner screen ────────────────────────────────────────────
+.scanner-screen {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.camera-bg {
+  position: absolute;
+  inset: 0;
+  // Only visible on web (simulation) or found phase
+  opacity: 0;
+  background: radial-gradient(ellipse at 50% 40%, #2a2a2a 0%, #0a0a0a 70%);
+  z-index: 0;
+  transition: opacity 0.3s;
+
+  &--always { opacity: 1; }
+}
+
+// ── Navbar ────────────────────────────────────────────────────
+.scanner-navbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  padding-top: calc(16px + var(--ion-safe-area-top, 44px));
+}
+
+.scanner-back {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ion-icon { font-size: 16px; }
+}
+
+.scanner-label {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  letter-spacing: 1.4px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.scanner-nav-spacer { width: 36px; }
+
+// ── Body ──────────────────────────────────────────────────────
+.scanner-body {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px calc(20px + var(--ion-safe-area-bottom, 0px));
+}
+
+// ── Viewport ──────────────────────────────────────────────────
+.scanner-viewport {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &--found {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px color-mix(in oklab, var(--accent) 60%, transparent);
+  }
+}
+
+.bracket {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-style: solid;
+  border-color: #fff;
+
+  &--tl { top: -2px;    left: -2px;  border-width: 2px 0 0 2px; }
+  &--tr { top: -2px;    right: -2px; border-width: 2px 2px 0 0; }
+  &--bl { bottom: -2px; left: -2px;  border-width: 0 0 2px 2px; }
+  &--br { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
+}
+
+.scan-line {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #fff, transparent);
+  box-shadow: 0 0 12px #fff;
+  animation: scanLine 2.4s ease-in-out infinite;
+}
+
+@keyframes scanLine {
+  0%   { top: 8px;               opacity: 0; }
+  10%  { top: 8px;               opacity: 1; }
+  50%  { top: calc(100% - 10px); opacity: 1; }
+  90%  { top: calc(100% - 10px); opacity: 1; }
+  100% { top: 8px;               opacity: 0; }
+}
+
+.found-indicator {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.found-check {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ink);
+
+  ion-icon { font-size: 22px; }
+}
+
+// ── Info text ─────────────────────────────────────────────────
+.scanner-info {
+  text-align: center;
+  margin-top: 24px;
+  max-width: 280px;
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: #fff;
+  }
+
+  &__sub {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  &__mono {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    letter-spacing: 1.4px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+
+  &__code {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    letter-spacing: -0.3px;
+  }
+}
+
+.scanner-spacer { flex: 1; }
+
+// ── Gym preview card ──────────────────────────────────────────
+.gym-preview {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  &__logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    background: var(--accent);
+    color: var(--accent-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  &__info { flex: 1; min-width: 0; }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 2px;
+  }
+
+  &__meta {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0;
+    font-family: var(--font-mono);
+    letter-spacing: 0.3px;
+  }
+}
+
+// ── Manual entry ──────────────────────────────────────────────
+.manual-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  padding: 10px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-family: var(--font-ui);
+}
+
+.manual-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__hint {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0;
+    text-align: center;
+  }
+}
+
+.manual-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-align: center;
+  outline: none;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+    letter-spacing: 0.5px;
+  }
+}
+
+.manual-submit {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: default;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.2s, color 0.2s;
+
+  &--active {
+    background: #fff;
+    color: #0a0a0a;
+    cursor: pointer;
+    &:active { opacity: 0.9; }
+  }
+}
+
+// ── Confirm button ────────────────────────────────────────────
+.confirm-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  border: none;
+  background: #fff;
+  color: #0a0a0a;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  transition: opacity 0.15s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  &:active:not(:disabled) { opacity: 0.9; }
+}

@@ -1,0 +1,132 @@
+<ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1 class="navbar__title">Perfil</h1>
+    <button class="btn-icon" aria-label="Ajustes">
+      <ion-icon name="settings-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- User header -->
+  <div class="user-header">
+    <app-avatar [name]="clientName" [size]="64" [avatarUrl]="avatarUrl"></app-avatar>
+    <div>
+      <h2 class="user-header__name">{{ clientName }}</h2>
+      <p class="user-header__sub">{{ memberSince }}</p>
+    </div>
+  </div>
+
+  <!-- Loading skeleton -->
+  <ng-container *ngIf="loading">
+    <div class="section">
+      <div class="skeleton-membership-card"></div>
+    </div>
+  </ng-container>
+
+  <!-- Membership card (dark) -->
+  <ng-container *ngIf="!loading">
+    <div class="section" *ngIf="plan; else noMembership">
+      <div class="membership-card">
+
+        <!-- Top row: name + status badge -->
+        <div class="membership-card__top">
+          <div>
+            <p class="label-mono" style="color: rgba(255,255,255,0.5); margin-bottom: 4px;">Membresía</p>
+            <h3 class="membership-card__name">{{ plan.name }}</h3>
+          </div>
+          <span class="membership-card__status"
+                [class.membership-card__status--expired]="plan.status === 'expired'"
+                [class.membership-card__status--pending]="plan.status === 'pending'">
+            {{ plan.status === 'active' ? 'ACTIVA' : plan.status === 'expired' ? 'VENCIDA' : 'PENDIENTE' }}
+          </span>
+        </div>
+
+        <!-- Days remaining progress bar -->
+        <div class="membership-card__progress" *ngIf="plan.daysTotal > 0">
+          <div class="membership-card__progress-bar">
+            <div class="membership-card__progress-fill"
+                 [style.width.%]="(plan.daysRemaining / plan.daysTotal) * 100">
+            </div>
+          </div>
+          <p class="membership-card__progress-label">
+            {{ plan.daysRemaining }} días restantes · vence {{ plan.expirationDate }}
+          </p>
+        </div>
+
+        <!-- Key details -->
+        <div class="membership-card__details">
+          <div>
+            <p class="membership-card__detail-label">PRÓXIMO COBRO</p>
+            <p class="membership-card__detail-value">{{ plan.nextPayment }}</p>
+          </div>
+          <div>
+            <p class="membership-card__detail-label">MONTO</p>
+            <p class="membership-card__detail-value">₡{{ formatPrice(plan.price) }}</p>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="membership-card__features" *ngIf="plan.features.length">
+          <span *ngFor="let f of plan.features" class="membership-card__feature">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <circle cx="5" cy="5" r="5" fill="rgba(255,255,255,0.15)"/>
+              <path d="M3 5l1.4 1.4L7 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ f }}
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <ng-template #noMembership>
+      <div class="section">
+        <div class="membership-card membership-card--empty">
+          <div class="membership-card__empty-icon">
+            <ion-icon name="business-outline"></ion-icon>
+          </div>
+          <p class="membership-card__empty-title">Sin membresía</p>
+          <p class="membership-card__empty-sub">No estás afiliado a ningún gimnasio</p>
+        </div>
+      </div>
+    </ng-template>
+
+  </ng-container>
+
+  <!-- Affiliate CTA -->
+  <div class="section affiliate-cta-section" *ngIf="!isAffiliated">
+    <button class="affiliate-cta" (click)="goAffiliate()">
+      <div class="affiliate-cta__icon">
+        <ion-icon name="qr-code-outline"></ion-icon>
+      </div>
+      <div class="affiliate-cta__text">
+        <span class="affiliate-cta__title">Afiliarse a un gym</span>
+        <span class="affiliate-cta__sub">Escaneá el código QR del gimnasio</span>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="affiliate-cta__arrow"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Settings -->
+  <div class="section">
+    <div class="card settings-list">
+      <button *ngFor="let item of settingsItems; let last = last"
+              class="settings-item"
+              [class.settings-item--danger]="isDestructive(item)"
+              [class.settings-item--last]="last"
+              (click)="onSettingsItem(item)">
+        <span>{{ item }}</span>
+        <ion-icon name="chevron-forward-outline" *ngIf="!isDestructive(item)"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Version footer -->
+  <div class="app-version">MyGymGo · v1.0.0</div>
+
+</ion-content>

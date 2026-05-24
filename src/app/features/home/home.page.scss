@@ -1,0 +1,254 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 20px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+
+  .label-mono { margin: 0 0 2px; }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin: 0;
+    color: var(--ink);
+  }
+}
+
+.section {
+  padding: 0 20px 16px;
+
+  &--row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding-bottom: 0;
+    margin-bottom: 16px;
+  }
+}
+
+/* Notification badge on bell button */
+.btn-icon--notif {
+  position: relative;
+}
+
+.notif-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 16px;
+  background: var(--danger, #E5484D);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-shadow: 0 0 0 2px var(--bg);
+  pointer-events: none;
+}
+
+/* Hero workout */
+.hero-card {
+  background: var(--surface-inverse);
+  color: var(--on-surface-inverse);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  overflow: hidden;
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    line-height: 1.05;
+    margin: 0 0 20px;
+    color: var(--on-surface-inverse);
+  }
+
+  &__stats {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--on-surface-inverse-2);
+
+    strong {
+      color: var(--on-surface-inverse);
+      font-size: 18px;
+      font-family: var(--font-display);
+      font-weight: 600;
+    }
+  }
+}
+
+/* Skeleton */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+.sk-line {
+  border-radius: 5px;
+  background: var(--bg-sunk);
+  animation: pulse 1.4s ease-in-out infinite;
+
+  &--label { height: 10px; width: 70px; margin-bottom: 10px; }
+  &--num   { height: 36px; width: 90px; margin-bottom: 12px; border-radius: 8px; }
+  &--dots  { height: 6px;  width: 100%; border-radius: 3px; }
+  &--sub   { height: 10px; width: 100px; }
+}
+
+/* Stats cards */
+.stats-card {
+  padding: 16px;
+  border-radius: var(--radius-lg);
+
+  &__num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    margin: 4px 0 10px;
+    color: var(--ink);
+  }
+
+  &__total {
+    color: var(--ink-4);
+    font-size: 20px;
+  }
+
+  &__unit {
+    color: var(--ink-3);
+    font-size: 13px;
+    font-family: var(--font-ui);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+}
+
+.week-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.week-dot {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-sunk);
+
+  &--done { background: var(--accent); }
+}
+
+.streak-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-3);
+  font-size: 11px;
+
+  ion-icon { color: var(--warn); }
+}
+
+/* Membership */
+.membership-card {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  cursor: pointer;
+  border: none;
+
+  &__icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--bg-sunk);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-2);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  &__info { flex: 1; }
+
+  &__name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    margin: 0 0 2px;
+  }
+
+  &__sub {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin: 0;
+    font-family: var(--font-mono);
+    letter-spacing: 0.3px;
+  }
+
+  &__price {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+
+  &--empty {
+    cursor: default;
+    pointer-events: none;
+
+    .membership-card__icon { opacity: 0.5; }
+    .membership-card__name { color: var(--ink-3); font-weight: 400; }
+    .membership-card__sub  { color: var(--ink-4); }
+  }
+}
+
+/* Quick actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--ink-2);
+  }
+
+  span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+}

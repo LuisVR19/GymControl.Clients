@@ -1,0 +1,7 @@
+{
+  "name": "GymTemp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

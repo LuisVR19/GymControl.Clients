@@ -1,0 +1,74 @@
+<!-- Static top: grabber + header -->
+<div class="sheet-top">
+
+  <div class="grabber-wrap">
+    <div class="grabber"></div>
+  </div>
+
+  <div class="sheet-header">
+    <div>
+      <p class="label-mono sheet-eyebrow">{{ exercise.muscle }}</p>
+      <h2 class="sheet-title">{{ exercise.name }}</h2>
+    </div>
+    <button class="btn-icon btn-icon--sunk close-btn" (click)="dismiss()">
+      <ion-icon name="close-outline" style="font-size:18px;"></ion-icon>
+    </button>
+  </div>
+
+</div>
+
+<!-- Scrollable body -->
+<div class="sheet-body">
+
+  <!-- Target -->
+  <div class="meta-row">
+    <span class="label-mono meta-label">Series / Reps</span>
+    <span class="meta-value">{{ exercise.target }}</span>
+  </div>
+  <div class="meta-row" *ngIf="exercise.lastPerformance && exercise.lastPerformance !== '—'">
+    <span class="label-mono meta-label">Última vez</span>
+    <span class="meta-value">{{ exercise.lastPerformance }}</span>
+  </div>
+
+  <!-- Description -->
+  <ng-container *ngIf="exercise.description">
+    <p class="label-mono section-label">Descripción</p>
+    <p class="description-text">{{ exercise.description }}</p>
+  </ng-container>
+
+  <!-- Video -->
+  <ng-container *ngIf="exercise.videoUrl">
+    <p class="label-mono section-label">Video de referencia</p>
+
+    <!-- YouTube embed -->
+    <div class="video-wrap" *ngIf="isYoutube">
+      <iframe
+        [src]="embedUrl"
+        class="video-frame"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- Bucket / direct video -->
+    <div class="video-wrap" *ngIf="!isYoutube">
+      <video class="video-frame" controls playsinline preload="metadata">
+        <source [src]="exercise.videoUrl">
+      </video>
+    </div>
+
+  </ng-container>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!exercise.description && !exercise.videoUrl">
+    <ion-icon name="information-circle-outline"></ion-icon>
+    <p>Sin información adicional disponible</p>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="sheet-footer">
+  <button class="btn-primary footer-close" (click)="dismiss()">Cerrar</button>
+</div>

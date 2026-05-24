@@ -1,0 +1,151 @@
+<ion-content
+  [fullscreen]="true"
+  [class.scanner-transparent]="phase === 'scanning' && isNative && !manualMode">
+
+  <!-- ── DONE ──────────────────────────────────────────────── -->
+  <div *ngIf="phase === 'done'" class="result-screen">
+    <div class="result-screen__icon result-screen__icon--success">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </div>
+    <h2 class="result-screen__title">¡Afiliado!</h2>
+    <p class="result-screen__sub">
+      Te has afiliado correctamente{{ gym ? ' a ' + gym.name : ' al gimnasio' }}.
+    </p>
+    <button class="result-screen__btn" (click)="goHome()">Ir al inicio</button>
+  </div>
+
+  <!-- ── YA AFILIADO ────────────────────────────────────────── -->
+  <div *ngIf="phase === 'already_affiliated'" class="result-screen">
+    <div class="result-screen__icon result-screen__icon--info">
+      <ion-icon name="information-circle-outline"></ion-icon>
+    </div>
+    <h2 class="result-screen__title">Ya sos miembro</h2>
+    <p class="result-screen__sub">
+      Ya pertenecés a este gimnasio{{ gym ? ': ' + gym.name : '' }}.
+    </p>
+    <button class="result-screen__btn" (click)="goHome()">Ir al inicio</button>
+    <button class="result-screen__btn result-screen__btn--ghost" (click)="retryScanner()">
+      Escanear otro
+    </button>
+  </div>
+
+  <!-- ── ERROR ──────────────────────────────────────────────── -->
+  <div *ngIf="phase === 'error'" class="result-screen">
+    <div class="result-screen__icon result-screen__icon--error">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+    </div>
+    <h2 class="result-screen__title">Algo salió mal</h2>
+    <p class="result-screen__sub">{{ errorMessage }}</p>
+    <button class="result-screen__btn" (click)="retryScanner()">Reintentar</button>
+  </div>
+
+  <!-- ── SCANNER / FOUND ────────────────────────────────────── -->
+  <div *ngIf="phase === 'scanning' || phase === 'found'" class="scanner-screen">
+
+    <!-- Simulated camera bg (web or found phase overlay) -->
+    <div class="camera-bg" [class.camera-bg--always]="!isNative || phase === 'found'"></div>
+
+    <!-- Navbar -->
+    <div class="scanner-navbar">
+      <button class="scanner-back" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <span class="scanner-label">AFILIARSE A UN GYM</span>
+      <div class="scanner-nav-spacer"></div>
+    </div>
+
+    <!-- Body -->
+    <div class="scanner-body">
+
+      <!-- Viewport ─ scanning phase -->
+      <div *ngIf="phase === 'scanning'" class="scanner-viewport">
+        <div class="bracket bracket--tl"></div>
+        <div class="bracket bracket--tr"></div>
+        <div class="bracket bracket--bl"></div>
+        <div class="bracket bracket--br"></div>
+        <div *ngIf="!manualMode" class="scan-line"></div>
+      </div>
+
+      <!-- Viewport ─ found phase (accent highlight + check) -->
+      <div *ngIf="phase === 'found'" class="scanner-viewport scanner-viewport--found">
+        <div class="bracket bracket--tl"></div>
+        <div class="bracket bracket--tr"></div>
+        <div class="bracket bracket--bl"></div>
+        <div class="bracket bracket--br"></div>
+        <div class="found-indicator">
+          <div class="found-check">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status text -->
+      <div class="scanner-info">
+        <ng-container *ngIf="phase === 'scanning' && !manualMode">
+          <h3 class="scanner-info__title">Buscando código…</h3>
+          <p class="scanner-info__sub">
+            {{ isNative
+                ? 'Acercá el código QR del gimnasio al cuadro.'
+                : 'La cámara solo está disponible en el dispositivo. Usá el modo manual.' }}
+          </p>
+        </ng-container>
+        <ng-container *ngIf="phase === 'found'">
+          <p class="scanner-info__mono">CÓDIGO DETECTADO</p>
+          <p class="scanner-info__code">{{ gym?.name ?? detectedCode }}</p>
+        </ng-container>
+      </div>
+
+      <div class="scanner-spacer"></div>
+
+      <!-- Gym preview card (found) -->
+      <div *ngIf="phase === 'found'" class="gym-preview">
+        <div class="gym-preview__logo">{{ (gym?.name ?? 'G').charAt(0).toUpperCase() }}</div>
+        <div class="gym-preview__info">
+          <p class="gym-preview__name">{{ gym?.name ?? 'Gimnasio' }}</p>
+          <p class="gym-preview__meta">Código: {{ detectedCode }}</p>
+        </div>
+      </div>
+
+      <!-- Manual link -->
+      <button
+        *ngIf="phase === 'scanning' && !manualMode"
+        class="manual-link"
+        (click)="enableManual()">
+        Ingresar ID manualmente
+      </button>
+
+      <!-- Manual input form -->
+      <div *ngIf="phase === 'scanning' && manualMode" class="manual-form">
+        <p class="manual-form__hint">Ingresá el código del gimnasio</p>
+        <input
+          class="manual-input"
+          [value]="manualCode"
+          (input)="onManualInput($any($event.target).value)"
+          maxlength="8"
+          placeholder="XXXXXXXX"
+          autocomplete="off"
+          spellcheck="false"
+          style="text-transform: uppercase;"
+        />
+        <button
+          class="manual-submit"
+          [class.manual-submit--active]="manualCode.length === 8"
+          [disabled]="manualCode.length < 8"
+          (click)="submitManual()">
+          Continuar
+        </button>
+      </div>
+
+      <!-- Confirm button (found) -->
+      <button
+        *ngIf="phase === 'found'"
+        class="confirm-btn"
+        [disabled]="isConfirming"
+        (click)="confirmAffiliate()">
+        {{ isConfirming ? 'Procesando…' : 'Confirmar afiliación' }}
+      </button>
+
+    </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,129 @@
+<!-- Static top: grabber + header + progress -->
+<div class="sheet-top">
+
+  <div class="grabber-wrap">
+    <div class="grabber"></div>
+  </div>
+
+  <div class="sheet-header">
+    <div>
+      <p class="label-mono step-label">Paso {{ step }} / 2</p>
+      <h2 class="sheet-title">{{ step === 1 ? 'Elegí una rutina' : 'Asignala a un día' }}</h2>
+    </div>
+    <button class="btn-icon btn-icon--sunk close-btn" (click)="dismiss()">
+      <ion-icon name="close-outline" style="font-size:18px;"></ion-icon>
+    </button>
+  </div>
+
+  <div class="step-progress">
+    <div class="step-seg" [class.step-seg--active]="step >= 1"></div>
+    <div class="step-seg" [class.step-seg--active]="step >= 2"></div>
+  </div>
+
+</div>
+
+<!-- Scrollable body: flex:1 + min-height:0 respeta la altura real del modal -->
+<div class="sheet-body">
+
+  <!-- ── Step 1: Choose routine ── -->
+  <ng-container *ngIf="step === 1">
+    <div class="routine-list" *ngIf="routines.length; else noRoutines">
+      <button *ngFor="let r of routines"
+              class="routine-item"
+              [class.routine-item--selected]="selectedRoutine?.id === r.id"
+              (click)="selectRoutine(r)">
+        <div class="routine-item__icon" [class.routine-item__icon--on]="selectedRoutine?.id === r.id">
+          <ion-icon name="barbell-outline"></ion-icon>
+        </div>
+        <div class="routine-item__info">
+          <span class="routine-item__name">{{ r.name }}</span>
+          <div class="routine-item__meta label-mono">
+            <span>{{ r.exercisesCount }} ej.</span>
+            <span>{{ r.setsCount }} series</span>
+          </div>
+        </div>
+        <div class="radio-dot" [class.radio-dot--on]="selectedRoutine?.id === r.id">
+          <ion-icon *ngIf="selectedRoutine?.id === r.id" name="checkmark-outline" style="font-size:13px;"></ion-icon>
+        </div>
+      </button>
+    </div>
+
+    <ng-template #noRoutines>
+      <div class="empty-state">
+        <ion-icon name="barbell-outline" class="empty-state__icon"></ion-icon>
+        <p class="empty-state__text">No tienes rutinas asignadas aún</p>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <!-- ── Step 2: Choose day + time ── -->
+  <ng-container *ngIf="step === 2">
+
+    <!-- Selected routine summary -->
+    <div class="routine-summary">
+      <div class="routine-summary__icon">
+        <ion-icon name="barbell-outline"></ion-icon>
+      </div>
+      <div class="routine-summary__info">
+        <span class="routine-summary__name">{{ selectedRoutine?.name }}</span>
+        <span class="label-mono routine-summary__meta">
+          {{ selectedRoutine?.exercisesCount }} ej. · {{ selectedRoutine?.setsCount }} series
+        </span>
+      </div>
+      <button class="routine-summary__change" (click)="back()">Cambiar</button>
+    </div>
+
+    <!-- Day chips -->
+    <p class="label-mono section-label">Día de la semana</p>
+    <div class="day-grid">
+      <button *ngFor="let num of DOW_NUMS; let i = index"
+              class="day-chip"
+              [class.day-chip--selected]="selectedDow === num"
+              [class.day-chip--occupied]="isOccupied(num) && selectedDow !== num"
+              (click)="selectedDow = num">
+        <span class="day-chip__abbr">{{ DOW_LABELS[i] | uppercase }}</span>
+        <span class="day-chip__letter">{{ DOW_SHORT[i] }}</span>
+        <span *ngIf="isOccupied(num) && selectedDow !== num" class="day-chip__dot"></span>
+      </button>
+    </div>
+
+    <!-- Time selector -->
+    <ng-container *ngIf="selectedDow">
+      <p class="label-mono section-label">Hora</p>
+      <div class="time-chips">
+        <button *ngFor="let t of TIMES"
+                class="time-chip"
+                [class.time-chip--selected]="selectedTime === t"
+                (click)="selectedTime = t">
+          {{ t }}
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- Replacement warning -->
+    <div class="replace-warning" *ngIf="willReplace">
+      <ion-icon name="notifications-outline" style="font-size:16px; flex-shrink:0;"></ion-icon>
+      <span>Ya hay una sesión planeada el {{ selectedDowLabel }}. Se reemplazará.</span>
+    </div>
+
+    <!-- Remove option -->
+    <button class="remove-link"
+            *ngIf="selectedDow && isOccupied(selectedDow)"
+            (click)="remove()">
+      <ion-icon name="trash-outline"></ion-icon>
+      Quitar asignación del {{ selectedDowLabel }}
+    </button>
+
+  </ng-container>
+
+</div>
+
+<!-- Footer always visible -->
+<div class="sheet-footer">
+  <button *ngIf="step === 2" class="btn-ghost footer-back" (click)="back()">Atrás</button>
+  <button class="btn-primary footer-confirm"
+          [disabled]="step === 1 ? !selectedRoutine : !canConfirm"
+          (click)="step === 1 ? continue() : confirm()">
+    {{ step === 1 ? 'Continuar' : 'Asignar al ' + selectedDowLabel }}
+  </button>
+</div>

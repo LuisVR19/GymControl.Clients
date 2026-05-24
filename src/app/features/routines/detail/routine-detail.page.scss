@@ -1,0 +1,220 @@
+:host { display: block; height: 100%; }
+
+.detail-content { --background: var(--bg); }
+
+/* ── Navbar ── */
+.detail-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 20px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+}
+
+/* ── Hero ── */
+.detail-hero {
+  padding: 8px 20px 16px;
+}
+
+.detail-hero__day {
+  margin: 0 0 6px;
+  color: var(--ink-2);
+}
+
+.detail-hero__name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+.detail-hero__stats {
+  display: flex;
+  gap: 24px;
+}
+
+.detail-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+
+  &__num {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+
+  &__label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.3px;
+  }
+}
+
+/* ── Muscle pills ── */
+.muscle-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 20px 16px;
+}
+
+/* ── Skeleton ── */
+.skeleton-wrap {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.skeleton-group {}
+
+.skeleton-label {
+  height: 10px;
+  width: 80px;
+  border-radius: 5px;
+  background: var(--bg-sunk);
+  margin-bottom: 8px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.skeleton-row {
+  height: 64px;
+  background: var(--bg-sunk);
+  border-bottom: 1px solid var(--line-2);
+  animation: pulse 1.4s ease-in-out infinite;
+
+  &:last-child { border-bottom: none; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+/* ── Exercise groups ── */
+.exercise-groups {
+  padding: 0 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.empty-exs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.group-label {
+  margin: 0 0 8px;
+  padding-left: 4px;
+}
+
+.exercise-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ── Exercise row ── */
+.ex-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line-2);
+
+  &--last { border-bottom: none; }
+
+  &__num {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    background: var(--bg-sunk);
+    color: var(--ink-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.1px;
+    color: var(--ink);
+    margin: 0 0 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 14px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--ink-2);
+    letter-spacing: 0.2px;
+  }
+
+  &__last {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--ink-4);
+    letter-spacing: 0.4px;
+    margin: 4px 0 0;
+  }
+}
+
+/* ── Detail button ── */
+.btn-detail {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  align-self: center;
+
+  &:active {
+    background: var(--bg-sunk);
+    color: var(--ink);
+  }
+}
+
+/* ── CTA footer ── */
+.detail-footer {
+  padding: 8px 20px 32px;
+  border-top: 0.5px solid var(--line);
+}

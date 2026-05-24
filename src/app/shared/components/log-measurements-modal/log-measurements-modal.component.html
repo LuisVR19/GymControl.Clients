@@ -1,0 +1,197 @@
+<!-- Static top: grabber + header -->
+<div class="sheet-top">
+
+  <div class="grabber-wrap">
+    <div class="grabber"></div>
+  </div>
+
+  <div class="sheet-header">
+    <div>
+      <p class="label-mono sheet-eyebrow">Hoy</p>
+      <h2 class="sheet-title">Registrar medidas</h2>
+    </div>
+    <button class="btn-icon btn-icon--sunk close-btn" (click)="dismiss()">
+      <ion-icon name="close-outline" style="font-size:18px;"></ion-icon>
+    </button>
+  </div>
+
+</div>
+
+<!-- Scrollable body -->
+<div class="sheet-body">
+
+  <!-- General -->
+  <p class="label-mono section-label">General</p>
+  <div class="field-group">
+
+    <div class="field-row">
+      <span class="field-name">Peso corporal</span>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.weight"
+               placeholder="—" min="0" max="300" step="0.1">
+        <span class="field-unit">kg</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <span class="field-name">Grasa corporal</span>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.bodyFat"
+               placeholder="—" min="0" max="60" step="0.1">
+        <span class="field-unit">%</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Torso -->
+  <p class="label-mono section-label">Torso</p>
+  <div class="field-group">
+
+    <div class="field-row">
+      <span class="field-name">Cuello</span>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.neck"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <span class="field-name">Pecho</span>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.chest"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <span class="field-name">Cintura</span>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.waist"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <span class="field-name">Cadera</span>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.hip"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Brazos -->
+  <p class="label-mono section-label">Brazos</p>
+  <div class="field-group">
+
+    <div class="field-row">
+      <div class="field-name-group">
+        <span class="field-name">Brazo</span>
+        <span class="field-side-badge">IZQ</span>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.leftArm"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-name-group">
+        <span class="field-name">Brazo</span>
+        <span class="field-side-badge">DER</span>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.rightArm"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Piernas -->
+  <p class="label-mono section-label">Piernas</p>
+  <div class="field-group">
+
+    <div class="field-row">
+      <div class="field-name-group">
+        <span class="field-name">Muslo</span>
+        <span class="field-side-badge">IZQ</span>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.thighLeft"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-name-group">
+        <span class="field-name">Muslo</span>
+        <span class="field-side-badge">DER</span>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.thighRight"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-name-group">
+        <span class="field-name">Pantorrilla</span>
+        <span class="field-side-badge">IZQ</span>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.calfLeft"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-name-group">
+        <span class="field-name">Pantorrilla</span>
+        <span class="field-side-badge">DER</span>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" class="field-input"
+               [(ngModel)]="form.calfRight"
+               placeholder="—" min="0" step="0.5">
+        <span class="field-unit">cm</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Footer always visible -->
+<div class="sheet-footer">
+  <button class="btn-ghost footer-cancel" (click)="dismiss()">Cancelar</button>
+  <button class="btn-primary footer-save"
+          [disabled]="!hasAnyValue || saving"
+          (click)="save()">
+    <ion-spinner *ngIf="saving" name="crescent" style="width:16px;height:16px;"></ion-spinner>
+    <ion-icon *ngIf="!saving" name="checkmark-outline" style="font-size:16px;"></ion-icon>
+    {{ saving ? 'Guardando…' : 'Guardar medidas' }}
+  </button>
+</div>

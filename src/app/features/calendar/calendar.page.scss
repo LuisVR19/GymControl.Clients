@@ -1,0 +1,337 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 20px 8px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+
+  .label-mono { margin: 0 0 2px; }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin: 0;
+    color: var(--ink);
+  }
+}
+
+.section {
+  padding: 8px 20px 0;
+}
+
+/* ─── Skeleton ──────────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.sk {
+  border-radius: 6px;
+  background: var(--bg-sunk);
+  animation: pulse 1.4s ease-in-out infinite;
+
+  &--cal-day      { aspect-ratio: 1; border-radius: 10px; display: block; }
+  &--legend-lbl   { height: 9px; width: 42px; }
+  &--upcoming-num { height: 22px; width: 26px; border-radius: 5px; }
+  &--upcoming-lbl { height: 9px;  width: 20px; margin-top: 5px; }
+  &--upcoming-name{ height: 13px; width: 55%; margin-bottom: 7px; }
+  &--upcoming-time{ height: 10px; width: 40px; }
+  &--sched-dow    { height: 10px; width: 24px; border-radius: 4px; flex-shrink: 0; }
+  &--sched-name   { height: 13px; border-radius: 5px; }
+  &--sched-icon   { height: 16px; width: 16px; border-radius: 50%; flex-shrink: 0; }
+}
+
+.sk-upcoming-item {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sk-upcoming-date {
+  width: 44px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sk-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
+.sk-upcoming-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sk-sched-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line-2);
+
+  &--last { border-bottom: none; }
+}
+
+/* ─── Calendar ───────────────────────────────────────────── */
+.cal-card { padding: 18px; }
+
+.cal-days-head {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+
+  span {
+    text-align: center;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--ink-3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--ink);
+  background: transparent;
+
+  &--empty   { color: var(--ink-4); }
+
+  &--today {
+    background: var(--ink);
+    color: var(--bg);
+    font-weight: 700;
+  }
+
+  &--done {
+    background: color-mix(in oklab, var(--accent) 45%, transparent);
+  }
+
+  &--planned {
+    background: var(--bg-sunk);
+    outline: 1px dashed var(--line);
+    outline-offset: -1px;
+  }
+}
+
+.cal-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    background: var(--bg-sunk);
+
+    &--done    { background: var(--accent); }
+    &--planned { border: 1px dashed var(--line); background: var(--bg-sunk); }
+  }
+}
+
+/* ─── Section header ─────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.assign-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-2);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.3px;
+  padding: 0;
+}
+
+/* ─── Empty state ────────────────────────────────────────── */
+.empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 20px;
+  text-align: center;
+
+  &__icon {
+    font-size: 28px;
+    color: var(--ink-4);
+  }
+
+  &__text {
+    font-size: 13px;
+    color: var(--ink-3);
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+/* ─── Upcoming ───────────────────────────────────────────── */
+.upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.upcoming-item {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  &__date {
+    width: 44px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  &__day {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--ink);
+    display: block;
+  }
+
+  &__month {
+    margin: 2px 0 0;
+    display: block;
+  }
+
+  &__divider {
+    width: 1px;
+    height: 28px;
+    background: var(--line);
+    flex-shrink: 0;
+  }
+
+  &__info { flex: 1; }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 2px;
+  }
+
+  &__time { margin: 0; }
+
+  &__arrow {
+    color: var(--ink-4);
+    font-size: 16px;
+  }
+}
+
+/* ─── Weekly schedule ────────────────────────────────────── */
+.schedule-list {
+  padding: 0;
+  overflow: hidden;
+}
+
+.schedule-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--line-2);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+
+  &:active { background: var(--bg-sunk); }
+  &--last  { border-bottom: none; }
+
+  &__dow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    width: 28px;
+    flex-shrink: 0;
+  }
+
+  &--set &__dow { color: var(--ink-2); }
+
+  &__info { flex: 1; min-width: 0; }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__day-num {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+
+  &__empty {
+    font-size: 13px;
+    color: var(--ink-4);
+  }
+
+  &__icon {
+    font-size: 16px;
+    color: var(--ink-4);
+    flex-shrink: 0;
+
+    &--add { color: var(--accent); }
+  }
+}

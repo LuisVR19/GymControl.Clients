@@ -1,0 +1,169 @@
+<ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1 class="navbar__title">Progreso</h1>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <app-gym-badge></app-gym-badge>
+      <button class="btn-icon" aria-label="Opciones">
+        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Period tabs -->
+  <div class="period-tabs">
+    <button *ngFor="let tab of tabs; let i = index"
+            class="period-tab"
+            [class.period-tab--active]="activeTab === i"
+            (click)="activeTab = i">
+      {{ tab }}
+    </button>
+  </div>
+
+  <!-- Skeleton charts -->
+  <div class="charts" *ngIf="loading">
+
+    <!-- Skeleton: Peso corporal -->
+    <div class="card chart-card">
+      <div class="chart-card__header">
+        <div>
+          <div class="sk sk--label"></div>
+          <div class="sk sk--num-lg" style="margin-top: 8px;"></div>
+        </div>
+        <div class="sk sk--pill"></div>
+      </div>
+      <div class="sk sk--chart-sm"></div>
+    </div>
+
+    <!-- Skeleton: % Grasa corporal -->
+    <div class="card chart-card">
+      <div class="chart-card__header">
+        <div>
+          <div class="sk sk--label"></div>
+          <div class="sk sk--num-lg" style="margin-top: 8px;"></div>
+        </div>
+        <div class="sk sk--pill"></div>
+      </div>
+      <div class="sk sk--chart-sm"></div>
+    </div>
+
+    <!-- Skeleton: Volumen total -->
+    <div class="card chart-card">
+      <div class="chart-card__between">
+        <div>
+          <div class="sk sk--label"></div>
+          <div class="sk sk--num-md" style="margin-top: 8px;"></div>
+        </div>
+        <div class="sk sk--chart-inline"></div>
+      </div>
+    </div>
+
+    <!-- Skeleton: Medidas corporales -->
+    <div class="card">
+      <div class="measurements-header">
+        <div class="sk sk--label"></div>
+        <div class="sk sk--btn"></div>
+      </div>
+      <div class="measurements-grid">
+        <div *ngFor="let i of [1,2,3,4]" class="sk-measurement">
+          <div class="sk sk--meas-label"></div>
+          <div class="sk sk--meas-value"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Charts -->
+  <div class="charts" *ngIf="!loading">
+
+    <!-- Body weight -->
+    <div class="card chart-card">
+      <div class="chart-card__header">
+        <div>
+          <p class="label-mono">Peso corporal</p>
+          <div class="big-metric">
+            <span class="num-display" style="font-size: 38px;">{{ currentWeight }}</span>
+            <span class="big-metric__unit">kg</span>
+          </div>
+        </div>
+        <span class="pill pill-success">
+          <ion-icon name="trending-up-outline"></ion-icon>
+          {{ weightDelta }}
+        </span>
+      </div>
+      <app-sparkline
+        [data]="weightData"
+        [height]="60"
+        color="var(--ink)"
+        [fill]="true">
+      </app-sparkline>
+    </div>
+
+    <!-- Body fat -->
+    <div class="card chart-card">
+      <div class="chart-card__header">
+        <div>
+          <p class="label-mono">% Grasa corporal</p>
+          <div class="big-metric">
+            <span class="num-display" style="font-size: 38px;">{{ currentBodyFat }}</span>
+            <span class="big-metric__unit">%</span>
+          </div>
+        </div>
+        <span *ngIf="bodyFatDelta" class="pill pill-muted">{{ bodyFatDelta }}</span>
+      </div>
+      <app-sparkline
+        [data]="bodyFatData"
+        [height]="60"
+        color="var(--accent)"
+        [fill]="true">
+      </app-sparkline>
+    </div>
+
+    <!-- Volume -->
+    <div class="card chart-card">
+      <div class="chart-card__between">
+        <div>
+          <p class="label-mono">Volumen total</p>
+          <div class="big-metric" style="margin-top: 4px;">
+            <span class="num-display" style="font-size: 24px;">{{ currentVolume | number }}</span>
+            <span class="big-metric__unit">kg/sem</span>
+          </div>
+        </div>
+        <app-sparkline
+          [data]="volumeData"
+          [width]="140"
+          [height]="50"
+          color="var(--accent)">
+        </app-sparkline>
+      </div>
+    </div>
+
+    <!-- Measurements -->
+    <div class="card">
+      <div class="measurements-header">
+        <p class="label-mono">Medidas corporales</p>
+        <button class="measure-add-btn" (click)="openMeasurementsModal()">
+          <ion-icon name="add-outline"></ion-icon> Nueva
+        </button>
+      </div>
+      <div class="measurements-grid">
+        <div *ngFor="let m of measurements" class="measurement">
+          <p class="measurement__label">{{ m.label }}</p>
+          <div class="measurement__value">
+            <span class="num-display" style="font-size: 22px;">{{ m.value }}</span>
+            <span class="measurement__unit">{{ m.unit }}</span>
+            <span class="measurement__delta">{{ m.delta }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</ion-content>

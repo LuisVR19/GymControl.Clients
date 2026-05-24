@@ -1,0 +1,6 @@
+@use '../auth-shared';
+
+.auth-brand {
+  margin-bottom: 40px;
+  &__name { font-size: 28px; }
+}

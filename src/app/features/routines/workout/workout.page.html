@@ -1,0 +1,98 @@
+<ion-content [fullscreen]="true" class="workout-content">
+
+  <!-- Header -->
+  <div class="wk-header">
+    <button class="btn-icon btn-icon--sunk" (click)="close()" aria-label="Cerrar">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+    <div class="wk-header__center">
+      <p class="label-mono">{{ muscleLabel }}</p>
+      <p class="wk-header__timer">{{ timerFormatted }}</p>
+    </div>
+    <button class="btn-icon" [class.btn-icon--accent]="running"
+            [class.btn-icon--sunk]="!running"
+            (click)="toggleTimer()" aria-label="Timer">
+      <ion-icon [name]="running ? 'pause' : 'play'"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Progress -->
+  <div class="wk-progress">
+    <div class="wk-progress__labels">
+      <span>SERIES {{ doneSets }}/{{ totalSets }}</span>
+      <span>EJERCICIO {{ exIdx + 1 }}/{{ exercises.length }}</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-bar__fill" [style.width.%]="progress"></div>
+    </div>
+  </div>
+
+  <!-- Exercise card -->
+  <div class="section" *ngIf="exercise">
+    <div class="card ex-card">
+
+      <!-- Exercise info -->
+      <div class="ex-card__header">
+        <div>
+          <p class="label-mono" style="margin-bottom: 4px;">{{ exercise.muscle }}</p>
+          <h2 class="ex-card__name">{{ exercise.name }}</h2>
+          <p class="ex-card__meta">OBJETIVO {{ exercise.target }} · ÚLTIMA: {{ exercise.lastPerformance }}</p>
+        </div>
+      </div>
+
+      <!-- Sets table -->
+      <div class="sets-table">
+        <div class="sets-table__head">
+          <span>SET</span>
+          <span>KG</span>
+          <span>REPS</span>
+          <span></span>
+        </div>
+
+        <div *ngFor="let s of exercise.sets; let i = index"
+             class="sets-table__row"
+             [class.sets-table__row--done]="s.done">
+          <span class="sets-table__num">{{ i + 1 }}</span>
+          <input class="input-num"
+                 type="number"
+                 [value]="s.weight"
+                 (change)="updateSet(i, 'weight', $any($event.target).value)"
+                 [style.textDecoration]="s.done ? 'line-through' : 'none'"
+                 aria-label="Peso kg"/>
+          <input class="input-num"
+                 type="number"
+                 [value]="s.reps"
+                 (change)="updateSet(i, 'reps', $any($event.target).value)"
+                 [style.textDecoration]="s.done ? 'line-through' : 'none'"
+                 aria-label="Repeticiones"/>
+          <button class="check-btn"
+                  [class.check-btn--done]="s.done"
+                  (click)="toggleSet(i)"
+                  [attr.aria-label]="s.done ? 'Desmarcar serie' : 'Marcar serie'">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Add set -->
+      <button class="add-set-btn" (click)="addSet()">
+        <ion-icon name="add-outline"></ion-icon>
+        Añadir serie
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="wk-nav">
+    <button class="btn-ghost wk-nav__prev"
+            [disabled]="exIdx === 0"
+            (click)="prevExercise()">
+      Anterior
+    </button>
+    <button class="btn-primary wk-nav__next" (click)="nextOrFinish()">
+      {{ isLast ? 'Finalizar entreno' : 'Siguiente ejercicio' }}
+    </button>
+  </div>
+
+</ion-content>
