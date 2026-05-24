@@ -24,4 +24,4 @@ COPY --from=builder /app/www /usr/share/nginx/html
 
 EXPOSE 80
 
-CMD ["/bin/sh", "-c", "mkdir -p /usr/share/nginx/html/assets && printf 'window.__env={\"SUPABASE_URL\":\"%s\",\"SUPABASE_ANON_KEY\":\"%s\"};' \"$SUPABASE_URL\" \"$SUPABASE_ANON_KEY\" > /usr/share/nginx/html/assets/env.js && nginx -g 'daemon off;'"]
+CMD ["/bin/sh", "-c", "mkdir -p /usr/share/nginx/html/assets && printf 'window.__env={\"SUPABASE_URL\":\"%s\",\"SUPABASE_ANON_KEY\":\"%s\"};' \"$SUPABASE_URL\" \"$SUPABASE_ANON_KEY\" > /usr/share/nginx/html/assets/env.js && envsubst '$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
