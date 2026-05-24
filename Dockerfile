@@ -19,11 +19,9 @@ RUN npm run build -- --configuration=production
 FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/templates/default.conf.template
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
 COPY --from=builder /app/www /usr/share/nginx/html
 
 EXPOSE 80
 
-CMD ["/entrypoint.sh"]
+CMD ["/bin/sh", "-c", "mkdir -p /usr/share/nginx/html/assets && printf 'window.__env={\"SUPABASE_URL\":\"%s\",\"SUPABASE_ANON_KEY\":\"%s\"};' \"$SUPABASE_URL\" \"$SUPABASE_ANON_KEY\" > /usr/share/nginx/html/assets/env.js && nginx -g 'daemon off;'"]
