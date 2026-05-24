@@ -24,10 +24,11 @@ export class AuthService {
     this.userSubject.next(session?.user ?? null);
     if (session?.user) await this.loadProfile(session.user.id);
 
-    supabase.auth.onAuthStateChange(async (_, session) => {
+    supabase.auth.onAuthStateChange((_, session) => {
       this.userSubject.next(session?.user ?? null);
       if (session?.user) {
-        await this.loadProfile(session.user.id);
+        const userId = session.user.id;
+        queueMicrotask(() => { this.loadProfile(userId); });
       } else {
         this.profileSubject.next(null);
         this.gymSubject.next(null);
