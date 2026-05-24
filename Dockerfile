@@ -8,20 +8,24 @@ RUN npm ci
 
 COPY . .
 
-RUN printf 'export const environment = {\n  production: false,\n  supabaseUrl: "",\n  supabaseKey: "",\n};\n' \
-    > src/environments/environment.ts && \
-    printf 'export const environment = {\n  production: true,\n  supabaseUrl: (window as any).__env?.SUPABASE_URL ?? "",\n  supabaseKey: (window as any).__env?.SUPABASE_ANON_KEY ?? "",\n};\n' \
-    > src/environments/environment.prod.ts
+ARG SUPABASE_URL
+ARG SUPABASE_ANON_KEY
 
-RUN npm run build -- --configuration=production
+RUN test -n "$SUPABASE_URL" || (echo "ERROR: SUPABASE_URL build arg is missing" && exit 1)
+RUN test -n "$SUPABASE_ANON_KEY" || (echo "ERROR: SUPABASE_ANON_KEY build arg is missing" && exit 1)
+
+RUN printf 'export const environment = {\n  production: true,\n  supabase: {\n    url: "%s",\n    anonKey: "%s",\n  },\n};\n' \
+    "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > src/environments/environment.ts
+
+RUN npm run build
 
 # Stage 2: Serve
 FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-COPY --from=builder /app/www /usr/share/nginx/html
+COPY --from=builder /app/dist/forja/browser /usr/share/nginx/html
 
 EXPOSE 80
 
-CMD ["/bin/sh", "-c", "mkdir -p /usr/share/nginx/html/assets && printf 'window.__env={\"SUPABASE_URL\":\"%s\",\"SUPABASE_ANON_KEY\":\"%s\"};' \"$SUPABASE_URL\" \"$SUPABASE_ANON_KEY\" > /usr/share/nginx/html/assets/env.js && envsubst '$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["/bin/sh", "-c", "envsubst '$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
