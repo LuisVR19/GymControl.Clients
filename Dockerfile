@@ -8,14 +8,8 @@ RUN npm ci
 
 COPY . .
 
-ARG SUPABASE_URL
-ARG SUPABASE_ANON_KEY
-
-RUN test -n "$SUPABASE_URL"      || (echo "ERROR: SUPABASE_URL build arg is missing"      && exit 1)
-RUN test -n "$SUPABASE_ANON_KEY" || (echo "ERROR: SUPABASE_ANON_KEY build arg is missing" && exit 1)
-
-RUN printf 'export const environment = {\n  production: true,\n  supabaseUrl: "%s",\n  supabaseKey: "%s",\n};\n' \
-    "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > src/environments/environment.prod.ts
+RUN printf 'export const environment = {\n  production: true,\n  supabaseUrl: (window as any).__env?.SUPABASE_URL ?? "",\n  supabaseKey: (window as any).__env?.SUPABASE_ANON_KEY ?? "",\n};\n' \
+    > src/environments/environment.prod.ts
 
 RUN npm run build -- --configuration=production
 
@@ -23,9 +17,11 @@ RUN npm run build -- --configuration=production
 FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/templates/default.conf.template
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 COPY --from=builder /app/www /usr/share/nginx/html
 
 EXPOSE 80
 
-CMD ["/bin/sh", "-c", "envsubst '$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["/entrypoint.sh"]
