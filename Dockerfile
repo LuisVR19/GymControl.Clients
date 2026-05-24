@@ -14,8 +14,9 @@ ARG SUPABASE_ANON_KEY
 RUN test -n "$SUPABASE_URL" || (echo "ERROR: SUPABASE_URL build arg is missing" && exit 1)
 RUN test -n "$SUPABASE_ANON_KEY" || (echo "ERROR: SUPABASE_ANON_KEY build arg is missing" && exit 1)
 
-RUN printf 'export const environment = {\n  production: true,\n  supabaseUrl: {\n    url: "%s",\n    supabaseKey: "%s",\n  },\n};\n' \
-    "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > src/environments/environment.ts
+RUN printf 'export const environment = {\n  production: true,\n  supabaseUrl: "%s",\n  supabaseKey: "%s",\n};\n' \
+    "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > src/environments/environment.ts && \
+    cp src/environments/environment.ts src/environments/environment.prod.ts
 
 RUN npm run build
 
@@ -24,7 +25,7 @@ FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-COPY --from=builder /app/dist/forja/browser /usr/share/nginx/html
+COPY --from=builder /app/www /usr/share/nginx/html
 
 EXPOSE 80
 
