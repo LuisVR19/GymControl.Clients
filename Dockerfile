@@ -8,7 +8,9 @@ RUN npm ci
 
 COPY . .
 
-RUN printf 'export const environment = {\n  production: true,\n  supabaseUrl: (window as any).__env?.SUPABASE_URL ?? "",\n  supabaseKey: (window as any).__env?.SUPABASE_ANON_KEY ?? "",\n};\n' \
+RUN printf 'export const environment = {\n  production: false,\n  supabaseUrl: "",\n  supabaseKey: "",\n};\n' \
+    > src/environments/environment.ts && \
+    printf 'export const environment = {\n  production: true,\n  supabaseUrl: (window as any).__env?.SUPABASE_URL ?? "",\n  supabaseKey: (window as any).__env?.SUPABASE_ANON_KEY ?? "",\n};\n' \
     > src/environments/environment.prod.ts
 
 RUN npm run build -- --configuration=production
