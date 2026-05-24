@@ -212,6 +212,25 @@ ion-item {
   text-transform: uppercase;
 }
 
+/* ─── Desktop responsive container ──────────────────────── */
+@media (min-width: 768px) {
+  html {
+    background: #080808;
+  }
+
+  body {
+    background: transparent;
+  }
+
+  ion-app {
+    max-width: 430px;
+    margin: 0 auto;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 0 80px rgba(0, 0, 0, 0.6);
+  }
+}
+
 /* ─── QR Scanner transparent background ─────────────────── */
 // Applied to body while @capacitor-mlkit/barcode-scanning is active.
 // Makes the webview transparent so the native camera layer shows through.
