@@ -1,29 +1,27 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
 import { RoutineService } from '../../../core/services/routine.service';
 import { WorkoutService } from '../../../core/services/workout.service';
 import { StatsService } from '../../../core/services/stats.service';
-import { Exercise, ExerciseSet } from '../../../core/models';
+import { Exercise } from '../../../core/models';
 
 @Component({
-  selector: 'app-workout',
+  selector: 'app-workout-simple',
   standalone: false,
-  templateUrl: './workout.page.html',
-  styleUrls: ['./workout.page.scss'],
+  templateUrl: './workout-simple.page.html',
+  styleUrls: ['./workout-simple.page.scss'],
 })
-export class WorkoutPage implements OnInit, OnDestroy {
+export class WorkoutSimplePage implements OnInit, OnDestroy {
   exercises: Exercise[] = [];
-  exIdx = 0;
+  checked: boolean[] = [];
   timerSecs = 0;
-  running = true;
   loading = true;
-  private timerRef: ReturnType<typeof setInterval> | null = null;
-
+  showConfirm = false;
+  routineName = '';
   private routineId: string | null = null;
   private dayNumber: number | undefined;
+  private timerRef: ReturnType<typeof setInterval> | null = null;
 
-  // Completion overlay state
   showCompletion = false;
   completionDuration = 0;
   completionStreak = 0;
@@ -48,29 +46,14 @@ export class WorkoutPage implements OnInit, OnDestroy {
     { x: 46, y: 94, d: 0.30, r: 12,  c: 'var(--ink-2)' },
   ];
 
-  get exercise(): Exercise | null {
-    return this.exercises[this.exIdx] ?? null;
-  }
+  get doneCount(): number { return this.checked.filter(Boolean).length; }
 
-  get totalSets(): number {
+  get totalSeries(): number {
     return this.exercises.reduce((acc, e) => acc + e.sets.length, 0);
   }
 
-  get doneSets(): number {
-    return this.exercises.reduce((acc, e) => acc + e.sets.filter(s => s.done).length, 0);
-  }
-
   get progress(): number {
-    return this.totalSets ? (this.doneSets / this.totalSets) * 100 : 0;
-  }
-
-  get isLast(): boolean {
-    return this.exIdx >= this.exercises.length - 1;
-  }
-
-  get muscleLabel(): string {
-    const muscles = [...new Set(this.exercises.map(e => e.muscle).filter(Boolean))];
-    return muscles.slice(0, 2).join(' · ') || 'Entreno';
+    return this.exercises.length ? (this.doneCount / this.exercises.length) * 100 : 0;
   }
 
   get timerFormatted(): string {
@@ -85,13 +68,13 @@ export class WorkoutPage implements OnInit, OnDestroy {
     private statsService: StatsService,
     private route: ActivatedRoute,
     private router: Router,
-    private toast: ToastController,
   ) {}
 
   ngOnInit() {
-    this.routineId = this.route.snapshot.paramMap.get('routineId');
-    const day = this.route.snapshot.queryParamMap.get('day');
-    this.dayNumber = day != null ? Number(day) : undefined;
+    this.routineId   = this.route.snapshot.paramMap.get('routineId');
+    const day        = this.route.snapshot.queryParamMap.get('day');
+    this.dayNumber   = day != null ? Number(day) : undefined;
+    this.routineName = this.route.snapshot.queryParamMap.get('name') ?? 'Rutina';
     this.load();
     this.startTimer();
   }
@@ -105,18 +88,21 @@ export class WorkoutPage implements OnInit, OnDestroy {
     this.loading = true;
     try {
       if (this.routineId) {
-        this.exercises = await this.routineService.getWorkoutExercises(this.routineId, this.dayNumber);
+        const [exercises, name] = await Promise.all([
+          this.routineService.getWorkoutExercises(this.routineId, this.dayNumber),
+          this.routineService.getRoutineName(this.routineId),
+        ]);
+        this.exercises   = exercises;
+        this.routineName = name || this.routineName;
+        this.checked     = exercises.map(() => false);
       }
-    } catch {
-      this.showToast('Error al cargar ejercicios');
     } finally {
       this.loading = false;
     }
   }
 
-  toggleTimer() {
-    this.running = !this.running;
-    if (this.running) this.startTimer(); else this.stopTimer();
+  toggle(i: number) {
+    this.checked = this.checked.map((v, j) => j === i ? !v : v);
   }
 
   private startTimer() {
@@ -127,44 +113,18 @@ export class WorkoutPage implements OnInit, OnDestroy {
     if (this.timerRef) { clearInterval(this.timerRef); this.timerRef = null; }
   }
 
-  toggleSet(setIdx: number) {
-    if (!this.exercise) return;
-    this.exercise.sets[setIdx].done = !this.exercise.sets[setIdx].done;
-  }
+  openConfirm()  { this.showConfirm = true; }
+  closeConfirm() { this.showConfirm = false; }
 
-  updateSet(setIdx: number, key: 'weight' | 'reps', value: string) {
-    if (!this.exercise) return;
-    this.exercise.sets[setIdx][key] = parseFloat(value) || 0;
-  }
-
-  addSet() {
-    if (!this.exercise) return;
-    const last = this.exercise.sets[this.exercise.sets.length - 1];
-    this.exercise.sets.push({ weight: last?.weight ?? 0, reps: last?.reps ?? 10, done: false });
-  }
-
-  prevExercise() {
-    if (this.exIdx > 0) this.exIdx--;
-  }
-
-  async nextOrFinish() {
-    if (!this.isLast) {
-      this.exIdx++;
-    } else {
-      await this.finishWorkout();
-    }
-  }
-
-  private async finishWorkout() {
+  async confirmFinish() {
+    this.showConfirm = false;
     this.stopTimer();
     this.completionDuration = this.timerSecs;
 
     const logs: { exerciseId: string; weight: number; reps: number }[] = [];
     for (const ex of this.exercises) {
       for (const set of ex.sets) {
-        if (set.done) {
-          logs.push({ exerciseId: ex.id, weight: set.weight, reps: set.reps });
-        }
+        logs.push({ exerciseId: ex.id, weight: set.weight, reps: set.reps });
       }
     }
     if (!logs.length && this.exercises.length) {
@@ -177,7 +137,7 @@ export class WorkoutPage implements OnInit, OnDestroy {
     } catch { /* silent */ }
 
     this.showCompletion = true;
-    this.completionTimers.push(setTimeout(() => this.showStreakNum  = true, 900));
+    this.completionTimers.push(setTimeout(() => this.showStreakNum   = true, 900));
     this.completionTimers.push(setTimeout(() => this.showContinueBtn = true, 1800));
     this.completionTimers.push(setTimeout(() => this.navigateAfterCompletion(), 4200));
   }
@@ -197,11 +157,8 @@ export class WorkoutPage implements OnInit, OnDestroy {
 
   close() {
     this.stopTimer();
-    this.router.navigate(['/tabs/rutinas']);
-  }
-
-  private async showToast(message: string) {
-    const t = await this.toast.create({ message, duration: 3000, position: 'bottom', color: 'danger' });
-    await t.present();
+    this.router.navigate(['/tabs/rutinas/detail', this.routineId], {
+      queryParams: { day: this.dayNumber },
+    });
   }
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { App } from '@capacitor/app';
+import { Capacitor } from '@capacitor/core';
 import { AuthService } from '../../core/services/auth.service';
 import { MembershipService } from '../../core/services/membership.service';
 import { MembershipPlan } from '../../core/models';
@@ -18,6 +20,7 @@ export class ProfilePage implements OnInit {
   loading = true;
   isAffiliated = false;
   avatarUrl: string | null = null;
+  appVersion = '';
 
   settingsItems = [
     'Historial de pagos',
@@ -35,6 +38,11 @@ export class ProfilePage implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (Capacitor.isNativePlatform()) {
+      App.getInfo().then(info => this.appVersion = `v${info.version}`).catch(() => {});
+    } else {
+      this.appVersion = 'Web';
+    }
     this.auth.profile$.subscribe(p => {
       if (p) {
         this.clientName = p.name ?? '';

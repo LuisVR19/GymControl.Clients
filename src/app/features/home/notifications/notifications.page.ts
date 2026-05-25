@@ -7,13 +7,14 @@ export type NotifCategory = 'critical' | 'warning' | 'info';
 export type NotifFilter   = 'all' | 'unread' | 'critical' | 'warning' | 'info';
 
 export interface Notification {
-  id:    string;
-  cat:   NotifCategory;
-  from:  string;
-  title: string;
-  desc:  string;
-  t:     string;
-  read:  boolean;
+  id:        string;
+  cat:       NotifCategory;
+  from:      string;
+  avatarUrl: string | null;
+  title:     string;
+  desc:      string;
+  t:         string;
+  read:      boolean;
 }
 
 @Component({
@@ -49,13 +50,14 @@ export class NotificationsPage implements OnInit {
     try {
       const rows = await this.notifService.getNotifications();
       this.notifications = rows.map(r => ({
-        id:    r.id,
-        cat:   r.cat,
-        from:  r.sender,
-        title: r.title,
-        desc:  r.body,
-        t:     this.formatTime(r.created_at),
-        read:  r.read,
+        id:        r.id,
+        cat:       r.cat,
+        from:      r.sender,
+        avatarUrl: r.sender_avatar,
+        title:     r.title,
+        desc:      r.body,
+        t:         this.formatTime(r.created_at),
+        read:      r.read,
       }));
     } catch {
       this.showToast('Error al cargar notificaciones');

@@ -98,6 +98,10 @@ export class HomePage implements OnInit {
     this.router.navigate(['/tabs/perfil']);
   }
 
+  openGymInfo() {
+    this.router.navigate(['/tabs/inicio/gym-info']);
+  }
+
   async openMeasurementsModal() {
     const modal = await this.modalCtrl.create({
       component: LogMeasurementsModalComponent,

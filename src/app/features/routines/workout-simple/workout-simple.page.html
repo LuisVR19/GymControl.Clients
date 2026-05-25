@@ -1,0 +1,131 @@
+<ion-content [fullscreen]="true" class="ws-content">
+
+  <!-- Header -->
+  <div class="ws-header">
+    <button class="btn-icon btn-icon--sunk" (click)="close()" aria-label="Cerrar">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+    <div class="ws-header__center">
+      <p class="label-mono">Modo simplificado</p>
+      <p class="ws-header__timer">{{ timerFormatted }}</p>
+    </div>
+    <div style="width:40px;"></div>
+  </div>
+
+  <!-- Hero -->
+  <div class="ws-hero">
+    <h2 class="ws-hero__name">{{ routineName }}</h2>
+    <div class="ws-hero__meta">
+      <span>{{ doneCount }}/{{ exercises.length }} marcados</span>
+      <span class="ws-hero__dot">·</span>
+      <span>{{ totalSeries }} series</span>
+    </div>
+    <div class="ws-progress-bar">
+      <div class="ws-progress-bar__fill" [style.width.%]="progress"></div>
+    </div>
+  </div>
+
+  <!-- Exercise list -->
+  <div class="ws-list" *ngIf="!loading">
+    <button *ngFor="let ex of exercises; let i = index"
+            class="card ws-ex"
+            [class.ws-ex--done]="checked[i]"
+            (click)="toggle(i)"
+            [attr.aria-label]="ex.name">
+
+      <div class="ws-ex__check" [class.ws-ex__check--done]="checked[i]">
+        <ng-container *ngIf="checked[i]">
+          <ion-icon name="checkmark-outline" style="font-size:14px;"></ion-icon>
+        </ng-container>
+        <span *ngIf="!checked[i]" class="ws-ex__num">{{ i + 1 }}</span>
+      </div>
+
+      <div class="ws-ex__body">
+        <p class="ws-ex__name">{{ ex.name }}</p>
+        <div class="ws-ex__meta">
+          <span class="ws-ex__sets">{{ ex.sets.length }}×{{ ex.sets[0]?.reps ?? 0 }}</span>
+          <span>{{ ex.muscle.toLowerCase() }}</span>
+        </div>
+      </div>
+
+      <span class="ws-ex__target">{{ ex.target }}</span>
+
+    </button>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div class="ws-list" *ngIf="loading">
+    <div *ngFor="let i of [1,2,3,4]" class="card ws-ex ws-ex--skeleton">
+      <div class="sk-circle"></div>
+      <div class="sk-body">
+        <div class="sk-line sk-line--name"></div>
+        <div class="sk-line sk-line--meta"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fixed footer -->
+  <div class="ws-footer">
+    <button class="btn-primary" (click)="openConfirm()">
+      <ion-icon name="checkmark-outline" style="font-size:14px;"></ion-icon>
+      Terminar rutina
+    </button>
+  </div>
+
+  <!-- Confirm sheet -->
+  <div class="ws-scrim" *ngIf="showConfirm" (click)="closeConfirm()">
+    <div class="ws-sheet" (click)="$event.stopPropagation()">
+      <div class="ws-sheet__handle"></div>
+      <h3 class="ws-sheet__title">¿Terminar rutina?</h3>
+      <p class="ws-sheet__sub">
+        Se guardará tu entreno de hoy
+        ({{ timerFormatted }}{{ doneCount < exercises.length ? ' · ' + doneCount + '/' + exercises.length + ' ejercicios marcados' : ' · completa' }}).
+      </p>
+      <div class="ws-sheet__actions">
+        <button class="btn-ghost" (click)="closeConfirm()">Cancelar</button>
+        <button class="btn-primary btn-accent ws-sheet__confirm" (click)="confirmFinish()">
+          Sí, terminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Completion overlay -->
+  <div class="cwd" *ngIf="showCompletion">
+    <div class="cwd__confetti">
+      <div *ngFor="let p of confetti; let i = index"
+           class="cwd__particle"
+           [style.left.%]="p.x"
+           [style.top.%]="p.y"
+           [style.background]="p.c"
+           [style.border-radius.px]="i % 3 === 0 ? 2 : 10"
+           [style.transform]="'rotate(' + p.r + 'deg)'"
+           [style.animation-delay.s]="p.d">
+      </div>
+    </div>
+    <p class="cwd__eyebrow">Entreno completado</p>
+    <h1 class="cwd__headline">¡Bien hecho!</h1>
+    <div class="cwd__ring-wrap">
+      <div class="cwd__ring">
+        <svg class="cwd__flame" width="68" height="68" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2s4 4.5 4 9a4 4 0 1 1-8 0c0-1.5.5-2.5 1-3.5C8 9 6 11 6 14a6 6 0 0 0 12 0c0-5-6-12-6-12z"/>
+        </svg>
+      </div>
+      <div class="cwd__plus-one">+1</div>
+    </div>
+    <div class="cwd__streak" *ngIf="showStreakNum">
+      <p class="cwd__streak-label">Racha</p>
+      <div class="cwd__streak-row">
+        <span class="cwd__streak-num">{{ completionStreak }}</span>
+        <span class="cwd__streak-unit">días</span>
+      </div>
+      <p class="cwd__meta">{{ fmtDuration(completionDuration) }} · récord personal</p>
+    </div>
+    <button class="cwd__btn"
+            [class.cwd__btn--visible]="showContinueBtn"
+            (click)="continueFromCompletion()">
+      Continuar
+    </button>
+  </div>
+
+</ion-content>

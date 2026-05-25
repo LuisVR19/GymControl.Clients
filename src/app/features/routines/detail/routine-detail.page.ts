@@ -92,4 +92,10 @@ export class RoutineDetailPage implements OnInit {
       queryParams: { day: this.dayNumber },
     });
   }
+
+  startSimpleWorkout() {
+    this.router.navigate(['/tabs/rutinas/workout-simple', this.routineId], {
+      queryParams: { day: this.dayNumber, name: this.routineName },
+    });
+  }
 }

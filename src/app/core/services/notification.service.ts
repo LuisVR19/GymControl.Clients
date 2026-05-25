@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { supabase } from '../supabase.client';
 
 export interface NotificationRow {
-  id:         string;
-  cat:        'critical' | 'warning' | 'info';
-  sender:     string;
-  title:      string;
-  body:       string;
-  read:       boolean;
-  created_at: string;
+  id:           string;
+  cat:          'critical' | 'warning' | 'info';
+  sender:       string;
+  sender_avatar: string | null;
+  title:        string;
+  body:         string;
+  read:         boolean;
+  created_at:   string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -32,7 +33,25 @@ export class NotificationService {
       .select('id, cat, sender, title, body, read, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
-    return (data ?? []) as NotificationRow[];
+
+    const rows = (data ?? []) as Omit<NotificationRow, 'sender_avatar'>[];
+    if (rows.length === 0) return [];
+
+    const senderEmails = [...new Set(rows.map(r => r.sender))];
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('email, name, avatar_url')
+      .in('email', senderEmails);
+
+    const profileMap = new Map<string, { name: string; avatar_url: string | null }>(
+      (profiles ?? []).map(p => [p.email, { name: p.name, avatar_url: p.avatar_url ?? null }])
+    );
+
+    return rows.map(r => ({
+      ...r,
+      sender:        profileMap.get(r.sender)?.name ?? r.sender,
+      sender_avatar: profileMap.get(r.sender)?.avatar_url ?? null,
+    }));
   }
 
   async deleteOne(id: string): Promise<void> {

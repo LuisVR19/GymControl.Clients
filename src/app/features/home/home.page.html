@@ -7,11 +7,11 @@
   <!-- Navbar header -->
   <div class="navbar">
     <div>
-      <div class="gym-chip" *ngIf="gymName">
+      <button class="gym-chip" *ngIf="gymName" (click)="openGymInfo()">
         <app-gym-badge [size]="36"></app-gym-badge>
         <span class="gym-chip__name">{{ gymName }}</span>
         <ion-icon name="chevron-forward-outline" class="gym-chip__arrow"></ion-icon>
-      </div>
+      </button>
       <p class="label-mono">{{ todayLabel }}</p>
       <h1 class="navbar__title">Hola, {{ clientName || 'Atleta' }}</h1>
     </div>

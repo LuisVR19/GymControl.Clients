@@ -170,7 +170,12 @@ ion-item {
   background: var(--bg-elev);
   border: 1px solid var(--line-2);
   margin-bottom: 8px;
-  cursor: default;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background 0.12s;
+
+  &:active { background: var(--bg-sunk); }
 
   &__logo {
     width: 28px; height: 28px; border-radius: 28px;

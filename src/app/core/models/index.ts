@@ -26,9 +26,23 @@ export interface ScheduleEntry {
 // ─── DB row types ────────────────────────────────────────────────────────────
 
 export interface GymInfo {
-  id: string;
-  name: string;
-  logo_url: string | null;
+  id:        string;
+  name:      string;
+  logo_url:  string | null;
+  address:   string | null;
+  phone:     string | null;
+  whatsapp:  string | null;
+  website:   string | null;
+  instagram: string | null;
+  about:     string | null;
+}
+
+export interface GymHour {
+  id:         string;
+  gym_id:     string;
+  name:       string;
+  hours:      string;
+  sort_order: number;
 }
 
 export interface Profile {

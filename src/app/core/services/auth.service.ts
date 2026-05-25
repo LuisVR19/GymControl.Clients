@@ -46,7 +46,7 @@ export class AuthService {
     if ((data as any)?.gym_id) {
       const { data: gym } = await supabase
         .from('gyms')
-        .select('id, name, logo_url')
+        .select('id, name, logo_url, address, phone, whatsapp, website, instagram, about')
         .eq('id', (data as any).gym_id)
         .single();
       this.gymSubject.next(gym as GymInfo | null);

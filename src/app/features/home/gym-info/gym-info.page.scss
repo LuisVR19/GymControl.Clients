@@ -1,0 +1,303 @@
+:host { display: block; height: 100%; }
+
+.gi-content { --background: var(--bg); }
+
+// Navbar
+.gi-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 20px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+}
+
+// Hero
+.gi-hero {
+  padding: 8px 20px 22px;
+  text-align: center;
+
+  &__logo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.12));
+    overflow: hidden;
+  }
+
+  &__logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &__logo-init {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--bg);
+    letter-spacing: -0.5px;
+  }
+
+  &__name {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.8px;
+    line-height: 1;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  &__sub {
+    margin: 6px 0 0;
+    color: var(--ink-3);
+    letter-spacing: 0.3px;
+  }
+
+  &__status {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.4px;
+    background: color-mix(in oklab, var(--accent) 16%, var(--bg));
+    color: var(--accent);
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+}
+
+// Quick actions
+.gi-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 16px;
+}
+
+.gi-action-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  &--dark {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  &--accent {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+
+// Sections
+.gi-section {
+  padding: 0 20px 16px;
+
+  &--last { padding-bottom: 48px; }
+
+  &__label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 8px;
+    padding-left: 4px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+
+  &__count {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--ink-3);
+  }
+}
+
+// Card base
+.gi-card {
+  overflow: hidden;
+
+  &--rows { padding: 0; }
+}
+
+// Contact rows
+.gi-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line-2);
+
+  &--last { border-bottom: none; }
+
+  &__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    background: var(--bg-sunk);
+    color: var(--ink-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--accent {
+      background: color-mix(in oklab, var(--accent) 14%, var(--bg));
+      color: var(--accent);
+    }
+  }
+
+  &__body { flex: 1; min-width: 0; }
+
+  &__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 2px;
+  }
+
+  &__value {
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// Schedule
+.gi-schedule {
+  padding: 14px 16px;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line-2);
+
+    &--last { border-bottom: none; }
+  }
+
+  &__day {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+
+  &__hours {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink);
+    letter-spacing: 0.3px;
+
+    &--closed {
+      color: var(--ink-3);
+      font-style: italic;
+    }
+  }
+}
+
+// Trainers
+.gi-trainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line-2);
+
+  &--last { border-bottom: none; }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.1px;
+    color: var(--ink);
+    margin: 0 0 2px;
+  }
+
+  &__role {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--ink-3);
+    letter-spacing: 0.2px;
+    margin: 0;
+  }
+
+  &__exp {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--ink-4);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+}
+
+// About
+.gi-about {
+  padding: 16px;
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+// Empty state
+.gi-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 64px 20px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 13px;
+  p { margin: 0; }
+}

@@ -95,4 +95,56 @@
     </button>
   </div>
 
+
+  <!-- Completion overlay -->
+  <div class="cwd" *ngIf="showCompletion">
+
+    <!-- Confetti -->
+    <div class="cwd__confetti">
+      <div *ngFor="let p of confetti; let i = index"
+           class="cwd__particle"
+           [style.left.%]="p.x"
+           [style.top.%]="p.y"
+           [style.background]="p.c"
+           [style.border-radius.px]="i % 3 === 0 ? 2 : 10"
+           [style.transform]="'rotate(' + p.r + 'deg)'"
+           [style.animation-delay.s]="p.d">
+      </div>
+    </div>
+
+    <!-- Eyebrow -->
+    <p class="cwd__eyebrow">Entreno completado</p>
+
+    <!-- Headline -->
+    <h1 class="cwd__headline">¡Bien hecho!</h1>
+
+    <!-- Ring + flame -->
+    <div class="cwd__ring-wrap">
+      <div class="cwd__ring">
+        <svg class="cwd__flame" width="68" height="68" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2s4 4.5 4 9a4 4 0 1 1-8 0c0-1.5.5-2.5 1-3.5C8 9 6 11 6 14a6 6 0 0 0 12 0c0-5-6-12-6-12z"/>
+        </svg>
+      </div>
+      <div class="cwd__plus-one">+1</div>
+    </div>
+
+    <!-- Streak -->
+    <div class="cwd__streak" *ngIf="showStreakNum">
+      <p class="cwd__streak-label">Racha</p>
+      <div class="cwd__streak-row">
+        <span class="cwd__streak-num">{{ completionStreak }}</span>
+        <span class="cwd__streak-unit">días</span>
+      </div>
+      <p class="cwd__meta">{{ fmtDuration(completionDuration) }} · récord personal</p>
+    </div>
+
+    <!-- Continue button -->
+    <button class="cwd__btn"
+            [class.cwd__btn--visible]="showContinueBtn"
+            (click)="continueFromCompletion()">
+      Continuar
+    </button>
+
+  </div>
+
 </ion-content>

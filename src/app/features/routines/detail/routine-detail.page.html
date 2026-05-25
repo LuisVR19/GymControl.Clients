@@ -91,7 +91,10 @@
             [class.btn-accent]="active"
             (click)="startWorkout()">
       <ion-icon name="play" style="font-size:14px;"></ion-icon>
-      {{ active ? 'Empezar entreno' : 'Hacer esta rutina' }}
+      {{ active ? 'Empezar guiado' : 'Hacer guiada' }}
+    </button>
+    <button class="detail-footer__simple" (click)="startSimpleWorkout()">
+      Modo simplificado · solo lista
     </button>
   </div>
 
