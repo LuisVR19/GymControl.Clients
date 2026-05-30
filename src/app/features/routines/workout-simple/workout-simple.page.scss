@@ -78,18 +78,46 @@
   gap: 8px;
 }
 
+.btn-detail {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+
+  &:active {
+    background: var(--bg-sunk);
+    color: var(--ink);
+  }
+}
+
 .ws-ex {
   padding: 14px 16px;
   border: none;
-  cursor: pointer;
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
   opacity: 1;
   transition: opacity 0.2s;
 
   &--done { opacity: 0.55; }
+
+  &__tap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    min-width: 0;
+  }
 
   &__check {
     width: 32px;

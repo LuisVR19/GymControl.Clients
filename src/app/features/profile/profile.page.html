@@ -54,7 +54,9 @@
             </div>
           </div>
           <p class="membership-card__progress-label">
-            {{ plan.daysRemaining }} días restantes · vence {{ plan.expirationDate }}
+            {{ plan.daysRemaining }} días restantes
+            <ng-container *ngIf="plan.monthsPaid > 1"> · {{ plan.monthsPaid }} meses pagados</ng-container>
+            · vence {{ plan.expirationDate }}
           </p>
         </div>
 

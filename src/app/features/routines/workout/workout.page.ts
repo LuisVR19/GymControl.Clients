@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { RoutineService } from '../../../core/services/routine.service';
 import { WorkoutService } from '../../../core/services/workout.service';
 import { StatsService } from '../../../core/services/stats.service';
 import { Exercise, ExerciseSet } from '../../../core/models';
+import { ExerciseDetailModalComponent } from '../../../shared/components/exercise-detail-modal/exercise-detail-modal.component';
 
 @Component({
   selector: 'app-workout',
@@ -86,6 +87,7 @@ export class WorkoutPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private toast: ToastController,
+    private modalCtrl: ModalController,
   ) {}
 
   ngOnInit() {
@@ -141,6 +143,30 @@ export class WorkoutPage implements OnInit, OnDestroy {
     if (!this.exercise) return;
     const last = this.exercise.sets[this.exercise.sets.length - 1];
     this.exercise.sets.push({ weight: last?.weight ?? 0, reps: last?.reps ?? 10, done: false });
+  }
+
+  private readonly SS_LETTERS = ['A', 'B', 'C', 'D', 'E'];
+  private readonly SS_COLORS  = ['#3b82f6', '#22c55e', '#f97316', '#8b5cf6', '#ef4444'];
+
+  supersetLetter(g: number): string { return this.SS_LETTERS[(g - 1) % 5]; }
+
+  supersetColor(g: number): string { return this.SS_COLORS[(g - 1) % 5]; }
+
+  supersetColorBg(g: number): string {
+    const hex = this.SS_COLORS[(g - 1) % 5];
+    const r = parseInt(hex.slice(1, 3), 16);
+    const gv = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r},${gv},${b},0.15)`;
+  }
+
+  async openExerciseDetail(exercise: Exercise) {
+    const modal = await this.modalCtrl.create({
+      component: ExerciseDetailModalComponent,
+      componentProps: { exercise },
+      cssClass: 'exercise-detail-sheet',
+    });
+    await modal.present();
   }
 
   prevExercise() {

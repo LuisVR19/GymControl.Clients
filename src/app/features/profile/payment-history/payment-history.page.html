@@ -61,16 +61,26 @@
         <div class="card payments-list">
           <div *ngFor="let p of payments; let last = last"
                class="payment-row"
-               [class.payment-row--last]="last">
-            <div class="payment-row__icon">
-              <ion-icon name="checkmark-outline"></ion-icon>
+               [class.payment-row--last]="last"
+               [class.payment-row--pending]="p.status === 'pending'"
+               [class.payment-row--overdue]="p.status === 'overdue'">
+            <div class="payment-row__icon"
+                 [class.payment-row__icon--pending]="p.status === 'pending'"
+                 [class.payment-row__icon--overdue]="p.status === 'overdue'">
+              <ion-icon [name]="p.status === 'paid' ? 'checkmark-outline' : p.status === 'pending' ? 'time-outline' : 'alert-outline'"></ion-icon>
             </div>
             <div class="payment-row__info">
               <div class="payment-row__top">
                 <span class="payment-row__amount">₡{{ p.amount }}</span>
                 <span class="payment-row__date">{{ p.date }}</span>
               </div>
-              <p class="payment-row__sub">{{ p.plan ? p.plan + ' · ' : '' }}{{ p.method }}</p>
+              <p class="payment-row__sub">
+                <span *ngIf="p.isGroup" class="payment-row__badge">Grupal</span>
+                {{ p.plan ? p.plan + ' · ' : '' }}{{ p.method }}
+              </p>
+              <p class="payment-row__coverage" *ngIf="p.coverageStart">
+                Cubre: {{ p.coverageStart }} – {{ p.coverageEnd }}<ng-container *ngIf="p.monthsPaid && p.monthsPaid > 1"> · {{ p.monthsPaid }} meses</ng-container>
+              </p>
               <p class="payment-row__ref" *ngIf="p.ref">{{ p.ref }}</p>
             </div>
             <button class="payment-row__dl" aria-label="Descargar recibo" title="Descargar recibo">

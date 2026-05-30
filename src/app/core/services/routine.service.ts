@@ -56,7 +56,7 @@ export class RoutineService {
   async getWorkoutExercises(routineId: string, dayNumber?: number): Promise<Exercise[]> {
     const { data, error } = await supabase
       .from('routine_exercises')
-      .select('id, sets, reps, day_number, exercises(id, name, description, video_url, youtube_url, muscle_groups(id, name))')
+      .select('id, sets, reps, day_number, superset_group, exercises(id, name, description, video_url, youtube_url, muscle_groups(id, name))')
       .eq('routine_id', routineId)
       .order('order_number', { ascending: true });
 
@@ -85,6 +85,7 @@ export class RoutineService {
         sets: setsArr,
         description: ex?.description ?? undefined,
         videoUrl: ex?.youtube_url || ex?.video_url || undefined,
+        supersetGroup: re.superset_group ?? null,
       } as Exercise;
     });
   }

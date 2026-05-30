@@ -50,36 +50,39 @@
     </div>
   </div>
 
-  <!-- Exercise groups -->
+  <!-- Exercise list (flat, ordered by order_number) -->
   <div class="exercise-groups" *ngIf="!loading">
 
-    <div *ngIf="exerciseGroups.length === 0" class="empty-exs">
+    <div *ngIf="exercises.length === 0" class="empty-exs">
       <ion-icon name="barbell-outline" style="font-size:32px; color:var(--ink-4);"></ion-icon>
       <p style="color:var(--ink-3); font-size:13px; margin:8px 0 0;">Sin ejercicios registrados</p>
     </div>
 
-    <div *ngFor="let g of exerciseGroups" class="exercise-group">
-      <p class="label-mono group-label">{{ g.muscle }}</p>
-      <div class="card exercise-card">
-        <div *ngFor="let ex of g.exercises; let i = index; let last = last"
-             class="ex-row"
-             [class.ex-row--last]="last">
+    <div *ngIf="exercises.length > 0" class="card exercise-card">
+      <div *ngFor="let ex of exercises; let i = index; let last = last"
+           class="ex-row"
+           [class.ex-row--last]="last"
+           [style.box-shadow]="ex.supersetGroup ? 'inset 3px 0 0 ' + supersetColor(ex.supersetGroup) : ''">
 
-          <div class="ex-row__num">{{ i + 1 }}</div>
-
-          <div class="ex-row__body">
-            <p class="ex-row__name">{{ ex.name }}</p>
-            <div class="ex-row__meta">
-              <span>{{ ex.target }}</span>
-            </div>
-            <p class="ex-row__last">ÚLTIMA · {{ ex.lastPerformance }}</p>
-          </div>
-
-          <button class="btn-detail" (click)="openExerciseDetail(ex)" aria-label="Ver detalles">
-            <ion-icon name="information-circle-outline" style="font-size:18px;"></ion-icon>
-          </button>
-
+        <div class="ex-row__num"
+             [style.background]="ex.supersetGroup ? supersetColorBg(ex.supersetGroup) : ''"
+             [style.color]="ex.supersetGroup ? supersetColor(ex.supersetGroup) : ''">
+          {{ ex.supersetGroup ? supersetLetter(ex.supersetGroup) : (i + 1) }}
         </div>
+
+        <div class="ex-row__body">
+          <p class="ex-row__name">{{ ex.name }}</p>
+          <div class="ex-row__meta">
+            <span>{{ ex.target }}</span>
+            <span *ngIf="ex.muscle">{{ ex.muscle }}</span>
+          </div>
+          <p class="ex-row__last">ÚLTIMA · {{ ex.lastPerformance }}</p>
+        </div>
+
+        <button class="btn-detail" (click)="openExerciseDetail(ex)" aria-label="Ver detalles">
+          <ion-icon name="information-circle-outline" style="font-size:18px;"></ion-icon>
+        </button>
+
       </div>
     </div>
 

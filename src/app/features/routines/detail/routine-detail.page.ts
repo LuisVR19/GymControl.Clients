@@ -33,6 +33,7 @@ export class RoutineDetailPage implements OnInit {
     return Math.max(10, Math.round((this.setsCount * 2.5) / 5) * 5);
   }
 
+  // Used only for muscle pills summary at the top
   get exerciseGroups(): { muscle: string; exercises: Exercise[] }[] {
     const map = new Map<string, Exercise[]>();
     for (const ex of this.exercises) {
@@ -41,6 +42,25 @@ export class RoutineDetailPage implements OnInit {
       map.get(key)!.push(ex);
     }
     return Array.from(map.entries()).map(([muscle, exercises]) => ({ muscle, exercises }));
+  }
+
+  private readonly SS_LETTERS = ['A', 'B', 'C', 'D', 'E'];
+  private readonly SS_COLORS  = ['#3b82f6', '#22c55e', '#f97316', '#8b5cf6', '#ef4444'];
+
+  supersetLetter(g: number): string {
+    return this.SS_LETTERS[(g - 1) % 5];
+  }
+
+  supersetColor(g: number): string {
+    return this.SS_COLORS[(g - 1) % 5];
+  }
+
+  supersetColorBg(g: number): string {
+    const hex = this.SS_COLORS[(g - 1) % 5];
+    const r = parseInt(hex.slice(1, 3), 16);
+    const gv = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r},${gv},${b},0.15)`;
   }
 
   constructor(

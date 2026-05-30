@@ -34,10 +34,21 @@
       <!-- Exercise info -->
       <div class="ex-card__header">
         <div>
-          <p class="label-mono" style="margin-bottom: 4px;">{{ exercise.muscle }}</p>
+          <div class="ex-card__eyebrow">
+            <p class="label-mono" style="margin-bottom: 0;">{{ exercise.muscle }}</p>
+            <span *ngIf="exercise.supersetGroup"
+                  class="ss-badge"
+                  [style.background]="supersetColorBg(exercise.supersetGroup)"
+                  [style.color]="supersetColor(exercise.supersetGroup)">
+              {{ supersetLetter(exercise.supersetGroup) }}
+            </span>
+          </div>
           <h2 class="ex-card__name">{{ exercise.name }}</h2>
           <p class="ex-card__meta">OBJETIVO {{ exercise.target }} · ÚLTIMA: {{ exercise.lastPerformance }}</p>
         </div>
+        <button class="btn-detail" (click)="openExerciseDetail(exercise)" aria-label="Ver detalles">
+          <ion-icon name="information-circle-outline" style="font-size:20px;"></ion-icon>
+        </button>
       </div>
 
       <!-- Sets table -->

@@ -27,30 +27,40 @@
 
   <!-- Exercise list -->
   <div class="ws-list" *ngIf="!loading">
-    <button *ngFor="let ex of exercises; let i = index"
-            class="card ws-ex"
-            [class.ws-ex--done]="checked[i]"
-            (click)="toggle(i)"
-            [attr.aria-label]="ex.name">
+    <div *ngFor="let ex of exercises; let i = index"
+         class="card ws-ex"
+         [class.ws-ex--done]="checked[i]"
+         [style.box-shadow]="ex.supersetGroup ? 'inset 3px 0 0 ' + supersetColor(ex.supersetGroup) : ''">
 
-      <div class="ws-ex__check" [class.ws-ex__check--done]="checked[i]">
-        <ng-container *ngIf="checked[i]">
-          <ion-icon name="checkmark-outline" style="font-size:14px;"></ion-icon>
-        </ng-container>
-        <span *ngIf="!checked[i]" class="ws-ex__num">{{ i + 1 }}</span>
-      </div>
-
-      <div class="ws-ex__body">
-        <p class="ws-ex__name">{{ ex.name }}</p>
-        <div class="ws-ex__meta">
-          <span class="ws-ex__sets">{{ ex.sets.length }}×{{ ex.sets[0]?.reps ?? 0 }}</span>
-          <span>{{ ex.muscle.toLowerCase() }}</span>
+      <div class="ws-ex__tap" (click)="toggle(i)" [attr.aria-label]="ex.name">
+        <div class="ws-ex__check"
+             [class.ws-ex__check--done]="checked[i]"
+             [style.background]="!checked[i] && ex.supersetGroup ? supersetColorBg(ex.supersetGroup) : ''"
+             [style.color]="!checked[i] && ex.supersetGroup ? supersetColor(ex.supersetGroup) : ''">
+          <ng-container *ngIf="checked[i]">
+            <ion-icon name="checkmark-outline" style="font-size:14px;"></ion-icon>
+          </ng-container>
+          <span *ngIf="!checked[i]" class="ws-ex__num">
+            {{ ex.supersetGroup ? supersetLetter(ex.supersetGroup) : (i + 1) }}
+          </span>
         </div>
+
+        <div class="ws-ex__body">
+          <p class="ws-ex__name">{{ ex.name }}</p>
+          <div class="ws-ex__meta">
+            <span class="ws-ex__sets">{{ ex.sets.length }}×{{ ex.sets[0]?.reps ?? 0 }}</span>
+            <span>{{ ex.muscle.toLowerCase() }}</span>
+          </div>
+        </div>
+
+        <span class="ws-ex__target">{{ ex.target }}</span>
       </div>
 
-      <span class="ws-ex__target">{{ ex.target }}</span>
+      <button class="btn-detail" (click)="openExerciseDetail(ex)" aria-label="Ver detalles">
+        <ion-icon name="information-circle-outline" style="font-size:18px;"></ion-icon>
+      </button>
 
-    </button>
+    </div>
   </div>
 
   <!-- Loading skeleton -->

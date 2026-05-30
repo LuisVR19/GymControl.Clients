@@ -69,6 +69,7 @@ export interface GymPlan {
   features: string[];
   access_type: 'unlimited' | 'limited';
   max_visits: number | null;
+  max_members: number;
   created_at: string;
 }
 
@@ -77,10 +78,12 @@ export interface UserMembership {
   user_id: string;
   gym_id: string;
   plan_id: string;
+  group_id: string | null;
   start_date: string;
   expiration_date: string;
   next_payment_date: string;
   payment_status: 'active' | 'pending' | 'expired';
+  current_coverage_end_date: string | null;
   is_current: boolean;
   created_at: string;
 }
@@ -95,6 +98,7 @@ export interface MembershipPlan {
   expirationDate: string;
   daysRemaining: number;
   daysTotal: number;
+  monthsPaid: number;
   features: string[];
 }
 
@@ -120,6 +124,7 @@ export interface Exercise {
   sets: ExerciseSet[];
   description?: string;
   videoUrl?: string;
+  supersetGroup?: number | null;
 }
 
 export interface ExerciseSet {
@@ -136,6 +141,10 @@ export interface Payment {
   status: 'paid' | 'pending' | 'overdue';
   plan?: string;
   ref?: string;
+  isGroup?: boolean;
+  coverageStart?: string;
+  coverageEnd?: string;
+  monthsPaid?: number;
 }
 
 export interface Measurement {
