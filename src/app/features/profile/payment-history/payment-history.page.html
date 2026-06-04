@@ -43,6 +43,33 @@
       </div>
     </div>
 
+    <!-- Pending payments — awaiting owner confirmation -->
+    <div class="section pending-section" *ngIf="pendingPayments.length > 0">
+      <p class="label-mono section__label">Por confirmar</p>
+      <div class="pending-list">
+        <div *ngFor="let p of pendingPayments" class="pending-card">
+          <div class="pending-card__icon">
+            <ion-icon name="time-outline"></ion-icon>
+          </div>
+          <div class="pending-card__info">
+            <div class="pending-card__top">
+              <span class="pending-card__amount">₡{{ p.amount }}</span>
+              <span class="pending-card__date">{{ p.date }}</span>
+            </div>
+            <p class="pending-card__sub">{{ p.plan }} · {{ p.method }}</p>
+            <div class="pending-badge">
+              <ion-icon name="time-outline"></ion-icon>
+              PENDIENTE DE CONFIRMACIÓN
+            </div>
+          </div>
+          <img *ngIf="p.proofUrl" [src]="p.proofUrl" alt="Comprobante" class="pending-card__thumb">
+        </div>
+      </div>
+      <p class="pending-note">
+        El dueño revisa tu comprobante y confirma el pago desde la web. Te avisamos cuando se acredite.
+      </p>
+    </div>
+
     <!-- Empty state -->
     <ng-container *ngIf="!payments.length">
       <div class="section">
@@ -54,10 +81,10 @@
       </div>
     </ng-container>
 
-    <!-- Payments list -->
+    <!-- Confirmed payments list -->
     <ng-container *ngIf="payments.length">
       <div class="section">
-        <p class="label-mono section__label">Todos los pagos</p>
+        <p class="label-mono section__label">Pagos confirmados</p>
         <div class="card payments-list">
           <div *ngFor="let p of payments; let last = last"
                class="payment-row"
@@ -95,6 +122,17 @@
       </div>
     </ng-container>
 
+    <!-- Bottom spacer for sticky CTA -->
+    <div class="cta-spacer"></div>
+
   </ng-container>
 
 </ion-content>
+
+<!-- Sticky register CTA -->
+<div class="cta-bar">
+  <button class="cta-bar__btn" (click)="goToRegister()">
+    <ion-icon name="add-outline"></ion-icon>
+    Registrar un pago
+  </button>
+</div>

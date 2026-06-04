@@ -145,6 +145,7 @@ export interface Payment {
   coverageStart?: string;
   coverageEnd?: string;
   monthsPaid?: number;
+  proofUrl?: string;
 }
 
 export interface Measurement {

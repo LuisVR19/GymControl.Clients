@@ -1,0 +1,279 @@
+<ion-content [fullscreen]="true">
+
+  <!-- ── SUCCESS STATE ─────────────────────────────────────────── -->
+  <ng-container *ngIf="sent">
+    <div class="success">
+      <div class="success__body">
+        <div class="success__ring">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <p class="success__eyebrow label-mono">Comprobante enviado</p>
+        <h1 class="success__title">Pago pendiente<br>de confirmación</h1>
+        <p class="success__desc">
+          Enviamos tu comprobante al dueño. El pago de
+          <strong>{{ membership?.planName }}</strong> por <strong>₡{{ amtFormatted }}</strong>
+          se acreditará cuando lo confirme desde la web.
+        </p>
+        <div class="success__hint">
+          <ion-icon name="notifications-outline" class="success__hint-icon"></ion-icon>
+          <p class="success__hint-text">
+            Te enviaremos una notificación apenas el pago sea aprobado.
+          </p>
+        </div>
+      </div>
+      <div class="success__footer">
+        <button class="btn-primary" (click)="goBack()">Entendido</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ── FORM STATE ────────────────────────────────────────────── -->
+  <ng-container *ngIf="!sent">
+
+    <!-- Navbar -->
+    <div class="navbar">
+      <button class="btn-icon btn-icon--sunk" (click)="goBack()" aria-label="Volver">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <p class="label-mono" style="margin: 0;">Registrar un pago</p>
+      <app-gym-badge></app-gym-badge>
+    </div>
+
+    <!-- Init loading skeleton -->
+    <ng-container *ngIf="initLoading">
+      <div class="section">
+        <div class="sk sk--label" style="margin-bottom: 12px;"></div>
+        <div class="sk sk--card"></div>
+      </div>
+      <div class="section">
+        <div class="sk sk--label" style="margin-bottom: 12px;"></div>
+        <div class="sk sk--card-sm"></div>
+      </div>
+    </ng-container>
+
+    <!-- No membership error -->
+    <ng-container *ngIf="!initLoading && membershipError">
+      <div class="section">
+        <div class="card error-card">
+          <ion-icon name="alert-circle-outline" class="error-card__icon"></ion-icon>
+          <p class="error-card__title">Sin membresía activa</p>
+          <p class="error-card__sub">No podés registrar un pago sin una membresía activa. Contactá con tu gimnasio.</p>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Form -->
+    <ng-container *ngIf="!initLoading && !membershipError">
+
+      <!-- Plan info (readonly) -->
+      <div class="section">
+        <p class="label-mono section__label">Tu membresía</p>
+        <div class="card plan-info">
+          <div class="plan-info__left">
+            <div class="plan-info__name">{{ membership?.planName }}</div>
+            <div class="plan-info__price">₡{{ (membership?.pricePerMonth ?? 0).toLocaleString('es-CR') }} / mes</div>
+          </div>
+          <div class="plan-info__badge">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            Activa
+          </div>
+        </div>
+      </div>
+
+      <!-- Months stepper -->
+      <div class="section">
+        <p class="label-mono section__label">Meses a pagar</p>
+        <div class="card stepper-card">
+          <div class="stepper">
+            <button class="stepper__btn" (click)="removeMonth()" [disabled]="months <= 1" aria-label="Restar mes">
+              <ion-icon name="remove-outline"></ion-icon>
+            </button>
+            <div class="stepper__value">
+              <span class="stepper__num">{{ months }}</span>
+              <span class="stepper__label">{{ months === 1 ? 'mes' : 'meses' }}</span>
+            </div>
+            <button class="stepper__btn" (click)="addMonth()" aria-label="Agregar mes">
+              <ion-icon name="add-outline"></ion-icon>
+            </button>
+          </div>
+          <div class="stepper-card__divider"></div>
+          <!-- Amount + period -->
+          <div class="stepper-card__summary">
+            <div class="stepper-card__amount">₡{{ amtFormatted }}</div>
+            <div class="stepper-card__period">{{ periodFormatted }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Method selection -->
+      <div class="section">
+        <p class="label-mono section__label">Método de pago</p>
+        <div class="method-grid">
+          <button class="method-card"
+                  [class.method-card--selected]="method === 'sinpe'"
+                  (click)="method = 'sinpe'">
+            <ion-icon name="paper-plane-outline" class="method-card__icon"></ion-icon>
+            <span class="method-card__label">SINPE Móvil</span>
+          </button>
+          <button class="method-card"
+                  [class.method-card--selected]="method === 'transfer'"
+                  (click)="method = 'transfer'">
+            <ion-icon name="card-outline" class="method-card__icon"></ion-icon>
+            <span class="method-card__label">Transferencia</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Account info -->
+      <div class="section">
+        <p class="label-mono section__label">
+          {{ method === 'sinpe' ? 'Hacé el SINPE Móvil a' : 'Transferí a la cuenta' }}
+        </p>
+        <div class="card info-card">
+
+          <ng-container *ngIf="method === 'sinpe'">
+            <div class="copy-row">
+              <div class="copy-row__info">
+                <span class="copy-row__label">NÚMERO SINPE MÓVIL</span>
+                <span class="copy-row__value copy-row__value--mono">{{ gymInfo.sinpe.number }}</span>
+              </div>
+              <button class="copy-btn" [class.copy-btn--copied]="copyFeedback['sinpe-num']"
+                      (click)="copy(gymInfo.sinpe.number, 'sinpe-num')" aria-label="Copiar">
+                <ion-icon [name]="copyFeedback['sinpe-num'] ? 'checkmark-outline' : 'copy-outline'"></ion-icon>
+              </button>
+            </div>
+            <div class="divider"></div>
+            <div class="copy-row">
+              <div class="copy-row__info">
+                <span class="copy-row__label">A NOMBRE DE</span>
+                <span class="copy-row__value">{{ gymInfo.sinpe.holder }}</span>
+              </div>
+              <button class="copy-btn" [class.copy-btn--copied]="copyFeedback['sinpe-holder']"
+                      (click)="copy(gymInfo.sinpe.holder, 'sinpe-holder')" aria-label="Copiar">
+                <ion-icon [name]="copyFeedback['sinpe-holder'] ? 'checkmark-outline' : 'copy-outline'"></ion-icon>
+              </button>
+            </div>
+            <div class="divider"></div>
+            <div class="copy-row">
+              <div class="copy-row__info">
+                <span class="copy-row__label">BANCO</span>
+                <span class="copy-row__value">{{ gymInfo.sinpe.bank }}</span>
+              </div>
+              <button class="copy-btn" [class.copy-btn--copied]="copyFeedback['sinpe-bank']"
+                      (click)="copy(gymInfo.sinpe.bank, 'sinpe-bank')" aria-label="Copiar">
+                <ion-icon [name]="copyFeedback['sinpe-bank'] ? 'checkmark-outline' : 'copy-outline'"></ion-icon>
+              </button>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="method === 'transfer'">
+            <div class="copy-row">
+              <div class="copy-row__info">
+                <span class="copy-row__label">BANCO</span>
+                <span class="copy-row__value">{{ gymInfo.transfer.bank }}</span>
+              </div>
+              <button class="copy-btn" [class.copy-btn--copied]="copyFeedback['tr-bank']"
+                      (click)="copy(gymInfo.transfer.bank, 'tr-bank')" aria-label="Copiar">
+                <ion-icon [name]="copyFeedback['tr-bank'] ? 'checkmark-outline' : 'copy-outline'"></ion-icon>
+              </button>
+            </div>
+            <div class="divider"></div>
+            <div class="copy-row">
+              <div class="copy-row__info">
+                <span class="copy-row__label">CUENTA IBAN</span>
+                <span class="copy-row__value copy-row__value--mono">{{ gymInfo.transfer.iban }}</span>
+              </div>
+              <button class="copy-btn" [class.copy-btn--copied]="copyFeedback['tr-iban']"
+                      (click)="copy(gymInfo.transfer.iban, 'tr-iban')" aria-label="Copiar">
+                <ion-icon [name]="copyFeedback['tr-iban'] ? 'checkmark-outline' : 'copy-outline'"></ion-icon>
+              </button>
+            </div>
+            <div class="divider"></div>
+            <div class="copy-row">
+              <div class="copy-row__info">
+                <span class="copy-row__label">A NOMBRE DE</span>
+                <span class="copy-row__value">{{ gymInfo.transfer.holder }}</span>
+              </div>
+              <button class="copy-btn" [class.copy-btn--copied]="copyFeedback['tr-holder']"
+                      (click)="copy(gymInfo.transfer.holder, 'tr-holder')" aria-label="Copiar">
+                <ion-icon [name]="copyFeedback['tr-holder'] ? 'checkmark-outline' : 'copy-outline'"></ion-icon>
+              </button>
+            </div>
+            <div class="divider"></div>
+            <div class="copy-row">
+              <div class="copy-row__info">
+                <span class="copy-row__label">CÉDULA JURÍDICA</span>
+                <span class="copy-row__value copy-row__value--mono">{{ gymInfo.transfer.ced }}</span>
+              </div>
+              <button class="copy-btn" [class.copy-btn--copied]="copyFeedback['tr-ced']"
+                      (click)="copy(gymInfo.transfer.ced, 'tr-ced')" aria-label="Copiar">
+                <ion-icon [name]="copyFeedback['tr-ced'] ? 'checkmark-outline' : 'copy-outline'"></ion-icon>
+              </button>
+            </div>
+          </ng-container>
+
+        </div>
+        <div class="amount-hint">
+          <ion-icon name="cash-outline"></ion-icon>
+          <span>Monto a enviar: <strong>₡{{ amtFormatted }}</strong></span>
+        </div>
+      </div>
+
+      <!-- Proof attachment -->
+      <div class="section">
+        <p class="label-mono section__label">Comprobante del pago</p>
+        <input #proofInput type="file" accept="image/*" style="display: none" (change)="onFileSelected($event)">
+
+        <button *ngIf="!image" class="proof-drop" (click)="triggerFilePicker()">
+          <div class="proof-drop__icon">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
+          </div>
+          <span class="proof-drop__title">Adjuntar imagen del comprobante</span>
+          <span class="proof-drop__sub">Captura de pantalla o foto · JPG, PNG</span>
+        </button>
+
+        <div *ngIf="image" class="card proof-preview">
+          <img [src]="image.url" alt="Comprobante" class="proof-preview__thumb">
+          <div class="proof-preview__info">
+            <div class="proof-preview__attached">
+              <ion-icon name="checkmark-outline"></ion-icon>
+              Imagen adjunta
+            </div>
+            <p class="proof-preview__name">{{ image.name }}</p>
+            <button class="proof-preview__change" (click)="triggerFilePicker()">Cambiar</button>
+          </div>
+          <button class="proof-preview__remove" (click)="removeImage()" aria-label="Quitar imagen">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Reference (optional) -->
+      <div class="section">
+        <p class="label-mono section__label">
+          Referencia <span class="label-opt">(opcional)</span>
+        </p>
+        <input class="ref-input" [(ngModel)]="reference"
+               placeholder="N.º de comprobante o nota"
+               type="text">
+      </div>
+
+      <!-- Submit button -->
+      <div class="section section--last">
+        <p *ngIf="!image" class="submit-hint">Adjuntá el comprobante para enviar</p>
+        <button class="btn-primary btn-accent"
+                [disabled]="!canSend"
+                [style.opacity]="canSend ? 1 : 0.4"
+                [style.cursor]="canSend ? 'pointer' : 'default'"
+                (click)="submit()">
+          <ion-spinner *ngIf="saving" name="crescent" style="width:16px;height:16px;"></ion-spinner>
+          <ion-icon *ngIf="!saving" name="paper-plane-outline"></ion-icon>
+          {{ saving ? 'Enviando…' : 'Enviar comprobante · ₡' + amtFormatted }}
+        </button>
+      </div>
+
+    </ng-container>
+
+  </ng-container>
+
+</ion-content>

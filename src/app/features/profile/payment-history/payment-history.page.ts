@@ -10,9 +10,21 @@ import { Payment } from '../../../core/models';
   styleUrls: ['./payment-history.page.scss'],
 })
 export class PaymentHistoryPage implements OnInit {
-  payments: Payment[] = [];
+  allPayments:  Payment[] = [];
   loading = true;
-  totalFormatted = '0';
+
+  get pendingPayments(): Payment[] {
+    return this.allPayments.filter(p => p.status === 'pending');
+  }
+
+  get payments(): Payment[] {
+    return this.allPayments.filter(p => p.status !== 'pending');
+  }
+
+  get totalFormatted(): string {
+    const total = this.payments.reduce((s, p) => s + p.rawAmount, 0);
+    return total.toLocaleString('es-CR');
+  }
 
   constructor(
     private payment: PaymentService,
@@ -20,6 +32,8 @@ export class PaymentHistoryPage implements OnInit {
   ) {}
 
   ngOnInit() { this.load(); }
+
+  ionViewWillEnter() { this.load(); }
 
   async doRefresh(event: Event) {
     await this.load();
@@ -29,13 +43,12 @@ export class PaymentHistoryPage implements OnInit {
   private async load() {
     this.loading = true;
     try {
-      this.payments = await this.payment.getPayments();
-      const total = this.payments.reduce((sum, p) => sum + p.rawAmount, 0);
-      this.totalFormatted = total.toLocaleString('es-CR');
+      this.allPayments = await this.payment.getPayments();
     } finally {
       this.loading = false;
     }
   }
 
-  goBack() { this.router.navigate(['/tabs/perfil']); }
+  goBack()       { this.router.navigate(['/tabs/perfil']); }
+  goToRegister() { this.router.navigate(['/tabs/perfil/register-payment']); }
 }
